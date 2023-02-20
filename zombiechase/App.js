@@ -1,11 +1,12 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LogInScreen } from "./screens/LogInScreen";
-import { UserHome } from "./screens/UserHome";
-import { Run } from "./screens/Run";
-import { RunHistory } from "./screens/RunHistory";
-import { ZombieRun } from "./screens/ZombieRun";
+import { Text } from "react-native";
+import LogInScreen from "./screens/LogInScreen";
+import UserHome from "./screens/UserHome";
+import StartRun from "./screens/StartRun";
+import RunHistory from "./screens/RunHistory";
+import ZombieRun from "./screens/ZombieRun";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ export default function App() {
           component={UserHome}
           options={{ title: "" }}
         />
-        <Stack.Screen name="Run" component={Run} options={{ title: "" }} />
+        <Stack.Screen name="Run" component={StartRun} />
         <Stack.Screen
           name="ZombieRun"
           component={ZombieRun}

@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-export const UserHome = ({ navigation }) => {
-  const Run = () => {
+export default function UserHome({ navigation }) {
+  const Go = () => {
     navigation.push("Run");
   };
   const ZombieRun = () => {
@@ -15,7 +15,7 @@ export const UserHome = ({ navigation }) => {
     <View>
       <Text>UserName</Text>
       {/* <Image>User Avatar</Image> */}
-      <TouchableOpacity onPress={Run}>
+      <TouchableOpacity onPress={Go}>
         <Text>Start Run </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={ZombieRun}>
@@ -26,4 +26,4 @@ export const UserHome = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
-};
+}

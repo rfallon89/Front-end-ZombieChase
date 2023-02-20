@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 
-export const ZombieRun = ({ navigation }) => {
+export default function ZombieRun({ navigation }) {
   return (
     <View>
       <Text>Zombie Run</Text>
     </View>
   );
-};
+}

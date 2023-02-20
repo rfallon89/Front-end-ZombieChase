@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 
-export const RunHistory = ({ navigation }) => {
+export default function RunHistory({ navigation }) {
   return (
     <View>
       <Text>Run History</Text>
     </View>
   );
-};
+}
