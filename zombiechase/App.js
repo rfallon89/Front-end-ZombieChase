@@ -1,11 +1,11 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LogInScreen from "./screens/LogInScreen";
-import UserHome from "./screens/UserHome";
-import Run from "./screens/Run";
-import RunHistory from "./screens/RunHistory";
-import ZombieRun from "./screens/ZombieRun";
+import { LogInScreen } from "./screens/LogInScreen";
+import { UserHome } from "./screens/UserHome";
+import { Run } from "./screens/Run";
+import { RunHistory } from "./screens/RunHistory";
+import { ZombieRun } from "./screens/ZombieRun";
 
 const Stack = createNativeStackNavigator();
 

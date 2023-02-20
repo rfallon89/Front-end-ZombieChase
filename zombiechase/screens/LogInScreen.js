@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity } from "react-native";
 
-export default function LogInScreen({ navigation }) {
+export const LogInScreen = ({ navigation }) => {
   return (
     <View>
       <View>
@@ -16,4 +16,4 @@ export default function LogInScreen({ navigation }) {
       </View>
     </View>
   );
-}
+};

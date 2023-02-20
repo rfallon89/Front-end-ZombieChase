@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-export default function UserHome({ navigation }) {
+export const UserHome = ({ navigation }) => {
   const Run = () => {
     navigation.push("Run");
   };
@@ -26,4 +26,4 @@ export default function UserHome({ navigation }) {
       </TouchableOpacity>
     </View>
   );
-}
+};
