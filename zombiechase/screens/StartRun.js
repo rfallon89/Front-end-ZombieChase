@@ -1,17 +1,24 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Button, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
 
 export default function StartRun() {
+  //--------------------------------------------------------------------------------------
   const [position, setPosition] = useState([]);
-  const [timer, setTimer] = useState(0);
-
+  const [speed, setSpeed] = useState([0]);
+  const [distance, setDistance] = useState(0);
+  const [counter, setCounter] = useState(0);
+  //--------------------------------------------------------------------------------------
+  const [timerPause, setTimerPause] = useState(true);
+  const [tracker, setTracker] = useState(null);
+  const [timer, setTimer] = useState(null);
+  //--------------------------------------------------------------------------------------
   const [currentPos, setCurrentPos] = useState({});
   const [start, setStart] = useState(false);
-  const [pause, setPause] = useState(false);
+  const [pause, setPause] = useState(true);
   const [stop, setStop] = useState(false);
-
+  //--------------------------------------------------------------------------------------
   useEffect(() => {
     const permissionRequest = async () => {
       const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -26,57 +33,89 @@ export default function StartRun() {
     };
     permissionRequest();
   }, []);
-
-  let tracking = null;
-
+  //--------------------------------------------------------------------------------------
+  useEffect(() => {
+    let count = setInterval(() => {
+      !tracker ? clearInterval(count) : null;
+      setCounter((curr) => curr + 1);
+      console.log(timerPause);
+    }, 1000);
+  }, [tracker]);
+  //----------------------------------------------------------------------------------
   const startRun = async () => {
-    setStart(!start);
+    setStart(true);
+    setStop(false);
     setPause(false);
-    tracking?.remove();
-    tracking = await Location.watchPositionAsync(
+    tracker ? tracker.remove() : null;
+    let tracking = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.BestForNavigation,
         distanceInterval: 10,
       },
-      (location) => {
-        console.log(location, "watch function");
-        setPosition((cur) => [
-          ...cur,
-          {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        ]);
+      ({ coords }) => {
+        let latLong = {
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        };
+
+        setPosition((cur) => {
+          setDistance(
+            geolib.getPathLength([...cur, latLong], geolib.getPreciseDistance) /
+              1000
+          );
+          return [...cur, latLong];
+        });
+        setSpeed((cur) => [...cur, coords.speed]);
       }
     );
-    const count = setInterval(() => {
-      setTimer((curr) => curr + 1);
-    }, 1000);
+    setTracker(tracking);
   };
-
+  //--------------------------------------------------------------------------------------
   const PauseRun = () => {
     setPause(!pause);
-    clearInterval(count);
-    tracking?.remove();
+    setTimerPause(true);
+    if (tracker) {
+      tracker.remove();
+      setTracker(null);
+    }
   };
-
+  //--------------------------------------------------------------------------------------
   const stopRun = () => {
-    tracking?.remove();
+    setStart(false);
+    if (tracker) {
+      tracker.remove();
+      setTracker(null);
+    }
     setPosition([]);
+    setTimerPause(true);
   };
-
+  //--------------------------------------------------------------------------------------
   return (
     <View>
       {!start ? (
-        <Button onPress={startRun} title="Start" color="green" />
-      ) : pause ? (
         <View>
+          <Text>{counter}</Text>
+          <Text>{distance}km</Text>
+          <Text>
+            {parseFloat(((speed[speed.length - 1] * 3600) / 1000).toFixed(2))}
+            km/hr
+          </Text>
           <Button onPress={startRun} title="Start" color="green" />
-          <Button onPress={stopRun} title="Stop" color="red" />
         </View>
       ) : (
+        // : pause ? (
+        //   <View>
+        //     <Button onPress={startRun} title="Start" color="green" />
+        //     <Button onPress={stopRun} title="Stop" color="red" />
+        //   </View>)
         <View>
-          <Button onPress={PauseRun} title="Pause" color="green" />
+          {/* <Button onPress={PauseRun} title="Pause" color="green" /> */}
+          <Text>{counter}</Text>
+          <Text>{distance}km</Text>
+          <Text>
+            {parseFloat(((speed[speed.length - 1] * 3600) / 1000).toFixed(2))}
+            km/hr
+          </Text>
           <Button onPress={stopRun} title="Stop" color="red" />
         </View>
       )}
