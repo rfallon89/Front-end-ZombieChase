@@ -2,9 +2,7 @@ import { View, Text, Button, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import { Map } from "./Map";
-import avgSpeed from "../utils/avgSpeed";
-import { timerFormat } from "../utils/timerFormat";
+import { runData } from "../component/runDataCard";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
@@ -16,7 +14,7 @@ export default function StartRun() {
   const [tracker, setTracker] = useState(null);
   const [timer, setTimer] = useState(null);
   //--------------------------------------------------------------------------------------
-  const [currentPos, setCurrentPos] = useState({});
+  // const [currentPos, setCurrentPos] = useState({});
   const [start, setStart] = useState(false);
   const [stop, setStop] = useState(false);
   //--------------------------------------------------------------------------------------
@@ -27,10 +25,10 @@ export default function StartRun() {
         console.log("location tracking denied");
         return;
       }
-      let currentPosition = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.BestForNavigation,
-      });
-      setCurrentPos(currentPosition);
+      //   let currentPosition = await Location.getCurrentPositionAsync({
+      //     accuracy: Location.Accuracy.BestForNavigation,
+      //   });
+      //   setCurrentPos(currentPosition);
     };
     permissionRequest();
   }, []);
@@ -97,43 +95,36 @@ export default function StartRun() {
     <View>
       {!start && !stop ? (
         <View>
-          <Text>Time: {timerFormat(counter)}</Text>
-          <Text>{`Distance: ${distance} km`}</Text>
-          {speed.length > 0 ? (
-            <Text>
-              {`Current Speed:
-            ${parseFloat(
-              ((speed[speed.length - 1] * 3600) / 1000).toFixed(2)
-            )} km/hr`}
-            </Text>
-          ) : (
-            <Text>Current Speed: 0 km/hr</Text>
-          )}
+          <runData
+            counter={counter}
+            distance={distance}
+            speed={speed}
+            stop={stop}
+            position={position}
+          />
           <Button onPress={commence} title="Start" color="green" />
         </View>
       ) : !stop && start ? (
         <View>
-          <Text>Time: {timerFormat(counter)}</Text>
-          <Text>{`Distance: ${distance} km`}</Text>
-          {speed.length > 0 ? (
-            <Text>
-              {`Current Speed:
-            ${parseFloat(
-              ((speed[speed.length - 1] * 3600) / 1000).toFixed(2)
-            )} km/hr`}
-            </Text>
-          ) : (
-            <Text>Current Speed: 0 km/hr</Text>
-          )}
+          <runData
+            counter={counter}
+            distance={distance}
+            speed={speed}
+            stop={stop}
+            position={position}
+          />
           <Button onPress={PauseRun} title="Pause" color="green" />
           <Button onPress={stopRun} title="Stop" color="red" />
         </View>
       ) : (
         <View>
-          <Text>Time: {timerFormat(counter)}</Text>
-          <Text>Distance: {distance}km</Text>
-          <Text>Avg Speed: {parseFloat(avgSpeed(speed).toFixed(2))}km/hr</Text>
-          <Map position={position} currentPos={currentPos} />
+          <runData
+            counter={counter}
+            distance={distance}
+            speed={speed}
+            stop={stop}
+            position={position}
+          />
         </View>
       )}
     </View>

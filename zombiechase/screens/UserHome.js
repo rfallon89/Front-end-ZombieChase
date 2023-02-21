@@ -4,8 +4,8 @@ export default function UserHome({ navigation }) {
   const Go = () => {
     navigation.push("Run");
   };
-  const ZombieRun = () => {
-    navigation.push("ZombieRun");
+  const ZombieSetup = () => {
+    navigation.push("ZombieSetup");
   };
   const RunHistory = () => {
     navigation.push("RunHistory");
@@ -18,8 +18,8 @@ export default function UserHome({ navigation }) {
       <TouchableOpacity onPress={Go}>
         <Text>Start Run </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={ZombieRun}>
-        <Text>Zombie Run </Text>
+      <TouchableOpacity onPress={ZombieSetup}>
+        <Text>Zombie Chase </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={RunHistory}>
         <Text> Previous Runs</Text>

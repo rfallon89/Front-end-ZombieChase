@@ -2,14 +2,14 @@ import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet } from "react-native";
 import finish from "../finish.png";
 
-export const Map = ({ currentPos, position }) => {
+export const Map = ({ position }) => {
   return (
     <MapView
       style={styles.map}
       customMapStyle={mapStyle}
       initialRegion={{
-        latitude: currentPos.coords.latitude,
-        longitude: currentPos.coords.longitude,
+        latitude: position[0].latitude,
+        longitude: position[0].longitude,
         latitudeDelta: 0.009,
         longitudeDelta: 0.009,
       }}
