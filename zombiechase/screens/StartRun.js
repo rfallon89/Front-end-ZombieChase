@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import * as geolib from "geolib";
 import { Map } from "./Map";
 import avgSpeed from "../utils/avgSpeed";
+import { timerFormat } from "../utils/timerFormat";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
@@ -96,30 +97,40 @@ export default function StartRun() {
     <View>
       {!start && !stop ? (
         <View>
-          <Text>Time: {counter}</Text>
-          <Text>Distance: {distance}km</Text>
-          <Text>
-            Current Speed:
-            {parseFloat(((speed[speed.length - 1] * 3600) / 1000).toFixed(2))}
-            km/hr
-          </Text>
+          <Text>Time: {timerFormat(counter)}</Text>
+          <Text>{`Distance: ${distance} km`}</Text>
+          {speed.length > 0 ? (
+            <Text>
+              {`Current Speed:
+            ${parseFloat(
+              ((speed[speed.length - 1] * 3600) / 1000).toFixed(2)
+            )} km/hr`}
+            </Text>
+          ) : (
+            <Text>Current Speed: 0 km/hr</Text>
+          )}
           <Button onPress={commence} title="Start" color="green" />
         </View>
       ) : !stop && start ? (
         <View>
-          <Text>Time: {counter}</Text>
-          <Text>Distance: {distance}km</Text>
-          <Text>
-            Current Speed:
-            {parseFloat(((speed[speed.length - 1] * 3600) / 1000).toFixed(2))}
-            km/hr
-          </Text>
+          <Text>Time: {timerFormat(counter)}</Text>
+          <Text>{`Distance: ${distance} km`}</Text>
+          {speed.length > 0 ? (
+            <Text>
+              {`Current Speed:
+            ${parseFloat(
+              ((speed[speed.length - 1] * 3600) / 1000).toFixed(2)
+            )} km/hr`}
+            </Text>
+          ) : (
+            <Text>Current Speed: 0 km/hr</Text>
+          )}
           <Button onPress={PauseRun} title="Pause" color="green" />
           <Button onPress={stopRun} title="Stop" color="red" />
         </View>
       ) : (
         <View>
-          <Text>Time: {counter}</Text>
+          <Text>Time: {timerFormat(counter)}</Text>
           <Text>Distance: {distance}km</Text>
           <Text>Avg Speed: {parseFloat(avgSpeed(speed).toFixed(2))}km/hr</Text>
           <Map position={position} currentPos={currentPos} />
