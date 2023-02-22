@@ -1,16 +1,25 @@
 import avgSpeed from "../utils/avgSpeed";
 import { timerFormat } from "../utils/timerFormat";
 import { Map } from "./Map";
+import { View, Text } from "react-native";
 
-export const runData = ({ counter, distance, speed, stop, position }) => {
+export const RunData = ({
+  counter,
+  distance,
+  speed,
+  stop,
+  position,
+  caught,
+}) => {
   return (
     <View>
+      {caught ? <Map position={position} /> : null}
       <Text>Time: {timerFormat(counter)}</Text>
-      <Text>{`Distance: ${distance} km`}</Text>
+      <Text>{`Distance: ${distance / 1000} km`}</Text>
       {stop ? (
         <View>
           <Text>Avg Pace: {parseFloat(avgSpeed(speed).toFixed(2))}km/hr</Text>
-          <Map position={position} />
+          {!caught ? <Map position={position} /> : null}
         </View>
       ) : speed.length > 0 ? (
         <Text>

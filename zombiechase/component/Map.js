@@ -1,6 +1,6 @@
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet } from "react-native";
-import finish from "../finish.png";
+import finish from "../assets/finish.png";
 
 export const Map = ({ position }) => {
   return (
