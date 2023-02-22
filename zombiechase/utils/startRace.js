@@ -1,11 +1,13 @@
 import { Audio } from "expo-av";
 
-export default function startAudio() {
+export default function startAudio(call) {
   async function playStartAudio() {
     const { sound } = await Audio.Sound.createAsync(
       require("../assets/startRace.mp3")
     );
-    await sound.playAsync();
+    if (call === 1) {
+      await sound.playAsync();
+    }
   }
   playStartAudio();
 }

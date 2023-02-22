@@ -6,6 +6,7 @@ import { RunData } from "../component/runDataCard";
 import zombieAudio from "../utils/zombieAudio";
 import startAudio from "../utils/startRace";
 import { timerFormat } from "../utils/timerFormat";
+import { zombiePositionArray } from "../utils/zombiePosition";
 
 export default function ZombieChase() {
   //----------------------Zombie States-------------------------
@@ -46,6 +47,7 @@ export default function ZombieChase() {
       }
     };
     permissionRequest();
+    startAudio();
   }, []);
   //--------------------------Check Chase Status---------------
   useEffect(() => {
@@ -54,6 +56,9 @@ export default function ZombieChase() {
       zombieAudio();
       setCaught({ distance: distance, time: counter });
       clearInterval(zombie);
+    }
+    if (distance >= chaseDistance * 1000 && distance != 0) {
+      stopRun();
     }
   }, [distance]);
   //---------------------------Track Run-----------------------
@@ -88,7 +93,7 @@ export default function ZombieChase() {
   const commence = () => {
     setStart(true);
     setPause(false);
-    startAudio();
+    startAudio(1);
     setTimeout(() => {
       let count = setInterval(() => {
         setCounter((curr) => curr + 1);
@@ -122,7 +127,6 @@ export default function ZombieChase() {
     }
     clearInterval(timer);
     clearInterval(zombie);
-    console.log(position);
   };
   //------------------------------------------------------------
   return (
@@ -197,6 +201,7 @@ export default function ZombieChase() {
             stop={stop}
             position={position}
             caught={caught}
+            zombiePositionArray={zombiePositionArray(position, zombieDistance)}
           />
         </View>
       )}

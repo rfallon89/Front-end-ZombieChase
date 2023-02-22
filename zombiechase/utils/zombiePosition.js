@@ -1,14 +1,13 @@
 const { getPathLength, getPreciseDistance } = require("geolib");
 
-export const zombiePosition = (position, zombieDistance, index = 1) => {
+export const zombiePositionArray = (position, zombieDistance, index = 1) => {
   if (
     zombieDistance <=
     getPathLength(position.slice(0, index), getPreciseDistance)
   ) {
-    console.log([position.slice(0, index), index]);
-    return [position.slice(0, index), index];
+    return position.slice(0, index);
   } else {
-    return zombiePosition(position, zombieDistance, index + 1);
+    return zombiePositionArray(position, zombieDistance, index + 1);
   }
 };
 

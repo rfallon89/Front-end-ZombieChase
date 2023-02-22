@@ -1,8 +1,10 @@
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet } from "react-native";
-import finish from "../assets/finish.png";
+import runner from "../assets/runner.png";
+import zombie from "../assets/zombie.png";
+import start from "../assets/start.png";
 
-export const Map = ({ position }) => {
+export const Map = ({ position, zombiePositionArray }) => {
   return (
     <MapView
       style={styles.map}
@@ -16,13 +18,13 @@ export const Map = ({ position }) => {
     >
       <Marker
         title="Finish"
-        icon={finish}
+        icon={runner}
         coordinate={position[position.length - 1]}
       />
-      <Marker title="Start" pinColor="#117f00" coordinate={position[0]} />
+      <Marker title="Start" icon={start} coordinate={position[0]} />
       <Polyline
         coordinates={position}
-        strokeColor="#000"
+        strokeColor="#A020F0"
         strokeColors={[
           "#7F0000",
           "#00000000",
@@ -31,8 +33,30 @@ export const Map = ({ position }) => {
           "#238C23",
           "#7F0000",
         ]}
-        strokeWidth={4}
+        strokeWidth={2}
       />
+      {zombiePositionArray ? (
+        <Polyline
+          coordinates={zombiePositionArray}
+          strokeColor="#00FF00"
+          strokeColors={[
+            "#7F0000",
+            "#00000000",
+            "#B24112",
+            "#E5845C",
+            "#238C23",
+            "#7F0000",
+          ]}
+          strokeWidth={2}
+        />
+      ) : null}
+      {zombiePositionArray ? (
+        <Marker
+          title="Zombie"
+          icon={zombie}
+          coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+        />
+      ) : null}
     </MapView>
   );
 };

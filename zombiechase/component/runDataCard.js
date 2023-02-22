@@ -10,10 +10,13 @@ export const RunData = ({
   stop,
   position,
   caught,
+  zombiePositionArray,
 }) => {
   return (
     <View>
-      {caught ? <Map position={position} /> : null}
+      {caught ? (
+        <Map position={position} zombiePositionArray={zombiePositionArray} />
+      ) : null}
       <Text>Time: {timerFormat(counter)}</Text>
       <Text>{`Distance: ${distance / 1000} km`}</Text>
       {stop ? (
