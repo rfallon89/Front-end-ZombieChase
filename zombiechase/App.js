@@ -6,8 +6,6 @@ import LogInScreen from "./screens/LogInScreen";
 import UserHome from "./screens/UserHome";
 import StartRun from "./screens/StartRun";
 import RunHistory from "./screens/RunHistory";
-import ZombieSetup from "./screens/ZombieSetup";
-import ZombieChase from "./screens/ZombieChase";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,18 +25,8 @@ export default function App() {
         />
         <Stack.Screen name="Run" component={StartRun} />
         <Stack.Screen
-          name="ZombieSetup"
-          component={ZombieSetup}
-          options={{ title: "" }}
-        />
-        <Stack.Screen
           name="RunHistory"
           component={RunHistory}
-          options={{ title: "" }}
-        />
-        <Stack.Screen
-          name="ZombieChase"
-          component={ZombieChase}
           options={{ title: "" }}
         />
       </Stack.Navigator>
