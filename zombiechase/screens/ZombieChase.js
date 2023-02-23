@@ -1,4 +1,11 @@
-import { View, Text, TextInput, Button } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
@@ -7,8 +14,17 @@ import zombieAudio from "../utils/zombieAudio";
 import startAudio from "../utils/startRace";
 import { timerFormat } from "../utils/timerFormat";
 import { zombiePositionArray } from "../utils/zombiePosition";
+import { List, TextInput } from "react-native-paper";
+import zombieHead from "../assets/zombieHead.png";
+import Background from "../assets/Background.png";
+import distanceIcon from "../assets/distanceIcon.png";
+import paceIcon from "../assets/paceIcon.png";
 
 export default function ZombieChase() {
+  //----------------------Dropdown------------------------------
+  const [pick, setPick] = useState("Difficulty Mode:");
+  const [expanded, setExpanded] = useState(false);
+  const handlePress = () => setExpanded(!expanded);
   //----------------------Zombie States-------------------------
   const [zombiePace, setZombiePace] = useState(0);
   const [chaseDistance, setChaseDistance] = useState(0);
@@ -130,81 +146,166 @@ export default function ZombieChase() {
   };
   //------------------------------------------------------------
   return (
-    <View>
-      {!start && !stop ? (
-        //----------------------Set Up Render-------------------------
-        <View>
-          <Text>Set Zombie Pace:</Text>
-          <TextInput
-            onChangeText={setZombiePace}
-            value={zombiePace}
-            keyboardType="numeric"
-          />
-          <Text>km/hr</Text>
-          <Text>Chase Distance:</Text>
-          <TextInput
-            onChangeText={setChaseDistance}
-            value={chaseDistance}
-            keyboardType="numeric"
-          />
-          <Text>km</Text>
-          {showStart ? (
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={Background}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        {!start && !stop ? (
+          //----------------------Set Up Render-------------------------
+          <View style={styles.container}>
+            <TextInput
+              onChangeText={setZombiePace}
+              value={zombiePace}
+              keyboardType="numeric"
+              mode="outlined"
+              label={"Zombie Pace (km/hr)"}
+              style={{ opacity: 1 }}
+              right={<TextInput.Icon icon={paceIcon} />}
+            />
+            <TextInput
+              onChangeText={setChaseDistance}
+              value={chaseDistance}
+              keyboardType="numeric"
+              mode="outlined"
+              label={"Chase Distance (km)"}
+              right={<TextInput.Icon icon={distanceIcon} />}
+            />
+            <List.Section title="" style={styles.drop}>
+              <List.Accordion
+                title={`${pick}`}
+                left={(props) => <List.Icon {...props} icon={zombieHead} />}
+                expanded={expanded}
+                onPress={handlePress}
+                theme={{ colors: { background: `#E6E6FA` } }}
+              >
+                <List.Item
+                  title="Easy"
+                  onPress={() => {
+                    setPick("Easy");
+                    setZombieDistance(-50);
+                    handlePress();
+                  }}
+                  style={styles.drop}
+                />
+                <List.Item
+                  title="Medium"
+                  onPress={() => {
+                    setPick("Medium");
+                    setZombieDistance(-30);
+                    handlePress();
+                  }}
+                />
+                <List.Item
+                  title="Hard"
+                  onPress={() => {
+                    setPick("Hard");
+                    setZombieDistance(-10);
+                    handlePress();
+                  }}
+                />
+              </List.Accordion>
+            </List.Section>
+            {showStart ? (
+              <TouchableOpacity onPress={commence} style={styles.btnPosition}>
+                <Text style={styles.startbtn}>Start</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        ) : pause && !stop ? (
+          //-----------------------Pause Render---------------------------
+          <View>
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+            />
             <Button onPress={commence} title="Start" color="green" />
-          ) : null}
-        </View>
-      ) : pause && !stop ? (
-        //-----------------------Pause Render---------------------------
-        <View>
-          <RunData
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            stop={stop}
-            position={position}
-          />
-          <Button onPress={commence} title="Start" color="green" />
-          <Button onPress={stopRun} title="Stop" color="red" />
-        </View>
-      ) : !stop && start ? (
-        //-------------------------Restart After Pause Render-----------
-        <View>
-          <RunData
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            stop={stop}
-            position={position}
-          />
-          <Button onPress={PauseRun} title="Pause" color="green" />
-          <Button onPress={stopRun} title="Stop" color="red" />
-        </View>
-      ) : (
-        //--------------------------Stop Render---------------------------
-        <View>
-          {caught.distance ? (
-            <Text>
-              {`Your brains were eaten ${timerFormat(caught.time)} in at${
-                caught.distance / 1000
-              }km`}
-            </Text>
-          ) : (
-            <Text>
-              {`You live to run another day. The zombie was ${parseFloat(
-                ((distance - zombieDistance) / 1000).toFixed(3)
-              )}km behind you!`}
-            </Text>
-          )}
-          <RunData
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            stop={stop}
-            position={position}
-            caught={caught}
-            zombiePositionArray={zombiePositionArray(position, zombieDistance)}
-          />
-        </View>
-      )}
+            <Button onPress={stopRun} title="Stop" color="red" />
+          </View>
+        ) : !stop && start ? (
+          //-------------------------Restart After Pause Render-----------
+          <View>
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+            />
+            <Button onPress={PauseRun} title="Pause" color="green" />
+            <Button onPress={stopRun} title="Stop" color="red" />
+          </View>
+        ) : (
+          //--------------------------Stop Render---------------------------
+          <View>
+            {caught.distance ? (
+              <Text>
+                {`Your brains were eaten ${timerFormat(caught.time)} in at${
+                  caught.distance / 1000
+                }km`}
+              </Text>
+            ) : (
+              <Text>
+                {`You live to run another day. The zombie was ${parseFloat(
+                  ((distance - zombieDistance) / 1000).toFixed(3)
+                )}km behind you!`}
+              </Text>
+            )}
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+              caught={caught}
+              zombiePositionArray={zombiePositionArray(
+                position,
+                zombieDistance
+              )}
+            />
+          </View>
+        )}
+      </ImageBackground>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    justifyContent: "center",
+  },
+  container: {
+    marginTop: "20%",
+    marginHorizontal: 20,
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 10,
+    elevation: 20,
+    shadowColor: `#4b0082`,
+    shadowOpacity: 1,
+  },
+  drop: {
+    backgroundColor: `#E6E6FA`,
+    opacity: 1,
+  },
+  startbtn: {
+    borderRadius: 300,
+    backgroundColor: "green",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    width: 70,
+    height: 70,
+  },
+  btnPosition: {
+    marginLeft: "34%",
+    marginTop: 15,
+  },
+});
