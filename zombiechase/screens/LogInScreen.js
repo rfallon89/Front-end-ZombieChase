@@ -9,7 +9,7 @@ export default function LogInScreen({ navigation }) {
       <View>
         <TouchableOpacity
           title="Login"
-          onPress={() => navigation.navigate("UserHome")}
+          onPress={() => navigation.navigate("login")}
         >
           <Text>Log in</Text>
         </TouchableOpacity>
