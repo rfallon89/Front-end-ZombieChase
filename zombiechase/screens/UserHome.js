@@ -5,25 +5,35 @@ import { userContext } from "../component/UserContext";
 
 export default function UserHome({ route, navigation }) {
   const { responseToken } = route.params;
-  const { user, setUser, token, setToken } = useContext(userContext);
+  const { user, setUser, token, setToken, setIsLoggedIn } =
+    useContext(userContext);
 
   useEffect(() => {
     axios
       .get(`http://192.168.0.5:5000/user?secret_token=${responseToken}`)
       .then(({ data }) => {
-        // console.log(data);
+        console.log(data);
         setUser(data.user);
         setToken(data.token);
+        setIsLoggedIn(true);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  const signOut = () => {
+    setUser({});
+    setToken("");
+    setIsLoggedIn(false);
+    navigation.navigate("Login");
+  };
+
   const Go = () => {
     navigation.push("Run");
   };
-  const ZombieSetup = () => {
-    navigation.push("ZombieSetup");
+  const ZombieChase = () => {
+    navigation.push("ZombieChase");
   };
   const RunHistory = () => {
     navigation.push("RunHistory");
@@ -36,11 +46,14 @@ export default function UserHome({ route, navigation }) {
       <TouchableOpacity onPress={Go}>
         <Text>Start Run </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={ZombieSetup}>
+      <TouchableOpacity onPress={ZombieChase}>
         <Text>Zombie Chase </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={RunHistory}>
         <Text> Previous Runs</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={signOut}>
+        <Text> Sign out</Text>
       </TouchableOpacity>
     </View>
   );

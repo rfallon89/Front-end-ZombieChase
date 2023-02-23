@@ -1,8 +1,9 @@
-import { View, Text, Button, TouchableOpacity } from "react-native";
+import { View, Button } from "react-native";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import { runData } from "../component/runDataCard";
+import { RunData } from "../component/runDataCard";
+import startAudio from "../utils/startRace";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
@@ -14,7 +15,6 @@ export default function StartRun() {
   const [tracker, setTracker] = useState(null);
   const [timer, setTimer] = useState(null);
   //--------------------------------------------------------------------------------------
-  // const [currentPos, setCurrentPos] = useState({});
   const [start, setStart] = useState(false);
   const [stop, setStop] = useState(false);
   //--------------------------------------------------------------------------------------
@@ -25,10 +25,6 @@ export default function StartRun() {
         console.log("location tracking denied");
         return;
       }
-      //   let currentPosition = await Location.getCurrentPositionAsync({
-      //     accuracy: Location.Accuracy.BestForNavigation,
-      //   });
-      //   setCurrentPos(currentPosition);
     };
     permissionRequest();
   }, []);
@@ -66,10 +62,13 @@ export default function StartRun() {
   //--------------------------------------------------------------------------------------
   const commence = () => {
     setStart(true);
-    let count = setInterval(() => {
-      setCounter((curr) => curr + 1);
-    }, 1000);
-    setTimer(count);
+    startAudio();
+    setTimeout(() => {
+      let count = setInterval(() => {
+        setCounter((curr) => curr + 1);
+      }, 1000);
+      setTimer(count);
+    }, 3000);
   };
   //--------------------------------------------------------------------------------------
   const PauseRun = () => {
@@ -95,7 +94,7 @@ export default function StartRun() {
     <View>
       {!start && !stop ? (
         <View>
-          <runData
+          <RunData
             counter={counter}
             distance={distance}
             speed={speed}
@@ -106,7 +105,7 @@ export default function StartRun() {
         </View>
       ) : !stop && start ? (
         <View>
-          <runData
+          <RunData
             counter={counter}
             distance={distance}
             speed={speed}
@@ -118,7 +117,7 @@ export default function StartRun() {
         </View>
       ) : (
         <View>
-          <runData
+          <RunData
             counter={counter}
             distance={distance}
             speed={speed}

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export const styles = StyleSheet.create({
   container: {
@@ -23,5 +24,8 @@ export const styles = StyleSheet.create({
   },
   button: {
     margin: 20,
+  },
+  buttonText: {
+    color: "white",
   },
 });
