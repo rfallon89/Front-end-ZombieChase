@@ -5,6 +5,7 @@ import zombie from "../assets/zombie.png";
 import start from "../assets/start.png";
 
 export const Map = ({ position, zombiePositionArray }) => {
+  console.log(position);
   return (
     <MapView
       style={styles.map}
