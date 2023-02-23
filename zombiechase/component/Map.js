@@ -3,12 +3,17 @@ import { StyleSheet } from "react-native";
 import runner from "../assets/runner.png";
 import zombie from "../assets/zombie.png";
 import start from "../assets/start.png";
+import { useEffect, useState } from "react";
 
 export const Map = ({ position, zombiePositionArray }) => {
-  console.log(position);
+  const [runtype, setRunType] = useState("");
+  useEffect(() => {
+    zombiePositionArray ? setRunType("Chase") : setRunType("Normal");
+  }, []);
+
   return (
     <MapView
-      style={styles.map}
+      style={styles[`map${runtype}`]}
       customMapStyle={mapStyle}
       initialRegion={{
         latitude: position[0].latitude,
@@ -163,8 +168,16 @@ let mapStyle = [
   },
 ];
 const styles = StyleSheet.create({
-  map: {
-    width: "100%",
-    height: "70%",
+  mapChase: {
+    width: "90%",
+    height: "65%",
+    marginHorizontal: 15,
+    marginVertical: 15,
+  },
+  mapNormal: {
+    width: "90%",
+    height: "75%",
+    marginHorizontal: 15,
+    marginVertical: 15,
   },
 });

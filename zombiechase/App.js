@@ -24,16 +24,8 @@ export default function App() {
           options={{ title: "" }}
         />
         <Stack.Screen name="Run" component={StartRun} />
-        <Stack.Screen
-          name="RunHistory"
-          component={RunHistory}
-          options={{ title: "" }}
-        />
-        <Stack.Screen
-          name="ZombieChase"
-          component={ZombieChase}
-          options={{ title: "" }}
-        />
+        <Stack.Screen name="RunHistory" component={RunHistory} />
+        <Stack.Screen name="ZombieChase" component={ZombieChase} />
       </Stack.Navigator>
     </NavigationContainer>
   );

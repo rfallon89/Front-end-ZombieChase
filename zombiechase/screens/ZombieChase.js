@@ -1,24 +1,27 @@
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
 import { RunData } from "../component/runDataCard";
+import { RunFinish } from "../component/runFinish";
 import zombieAudio from "../utils/zombieAudio";
 import startAudio from "../utils/startRace";
 import { timerFormat } from "../utils/timerFormat";
 import { zombiePositionArray } from "../utils/zombiePosition";
-import { List, TextInput } from "react-native-paper";
+import { List, TextInput, ProgressBar } from "react-native-paper";
 import zombieHead from "../assets/zombieHead.png";
 import Background from "../assets/Background.png";
 import distanceIcon from "../assets/distanceIcon.png";
 import paceIcon from "../assets/paceIcon.png";
+import runner from "../assets/runner.png";
+import zombieRunner from "../assets/zombie.png";
 
 export default function ZombieChase() {
   //----------------------Dropdown------------------------------
@@ -31,6 +34,7 @@ export default function ZombieChase() {
   const [showStart, setShowStart] = useState(false);
   const [zombieDistance, setZombieDistance] = useState(0);
   const [caught, setCaught] = useState({});
+  const [zombieProgress, setZombieProgress] = useState(0);
   //------------------------Run Data----------------------------
   const [position, setPosition] = useState([]);
   const [speed, setSpeed] = useState([]);
@@ -67,8 +71,10 @@ export default function ZombieChase() {
   }, []);
   //--------------------------Check Chase Status---------------
   useEffect(() => {
+    if (zombieDistance > 0) {
+      setZombieProgress(zombieDistance / distance);
+    }
     if (zombieDistance >= distance && distance != 0 && !caught.distance) {
-      console.log("CAUGHT!!!!!!");
       zombieAudio();
       setCaught({ distance: distance, time: counter });
       clearInterval(zombie);
@@ -126,6 +132,7 @@ export default function ZombieChase() {
   //------------------------------------------------------------
   const PauseRun = () => {
     setPause(true);
+    setStart(false);
     if (tracker) {
       tracker.remove();
       setTracker(null);
@@ -144,6 +151,7 @@ export default function ZombieChase() {
     clearInterval(timer);
     clearInterval(zombie);
   };
+  console.log(zombieProgress);
   //------------------------------------------------------------
   return (
     <View style={{ flex: 1 }}>
@@ -152,7 +160,7 @@ export default function ZombieChase() {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-        {!start && !stop ? (
+        {!start && !stop && !pause ? (
           //----------------------Set Up Render-------------------------
           <View style={styles.container}>
             <TextInput
@@ -161,7 +169,6 @@ export default function ZombieChase() {
               keyboardType="numeric"
               mode="outlined"
               label={"Zombie Pace (km/hr)"}
-              style={{ opacity: 1 }}
               right={<TextInput.Icon icon={paceIcon} />}
             />
             <TextInput
@@ -223,8 +230,40 @@ export default function ZombieChase() {
               stop={stop}
               position={position}
             />
-            <Button onPress={commence} title="Start" color="green" />
-            <Button onPress={stopRun} title="Stop" color="red" />
+            <Image
+              source={zombieRunner}
+              style={{ position: "absolute", top: 220, left: 23 }}
+            />
+            <ProgressBar
+              progress={zombieProgress}
+              color="green"
+              style={{
+                width: "60%",
+                position: "absolute",
+                right: "19%",
+                top: 80,
+              }}
+            />
+            <Image
+              source={runner}
+              style={{ position: "absolute", top: 220, right: 23 }}
+            />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              <TouchableOpacity
+                onPress={commence}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.startbtn}>Start</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={stopRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.stopbtn}>Stop</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : !stop && start ? (
           //-------------------------Restart After Pause Render-----------
@@ -236,30 +275,66 @@ export default function ZombieChase() {
               stop={stop}
               position={position}
             />
-            <Button onPress={PauseRun} title="Pause" color="green" />
-            <Button onPress={stopRun} title="Stop" color="red" />
+
+            <Image
+              source={zombieRunner}
+              style={{ position: "absolute", top: 220, left: 23 }}
+            />
+            <ProgressBar
+              progress={zombieProgress}
+              color="green"
+              style={{
+                width: "60%",
+                position: "absolute",
+                right: "19%",
+                top: 80,
+              }}
+            />
+            <Image
+              source={runner}
+              style={{ position: "absolute", top: 220, right: 23 }}
+            />
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <TouchableOpacity
+                onPress={PauseRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.pausebtn}>Pause</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={stopRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.stopbtn}>Stop</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           //--------------------------Stop Render---------------------------
           <View>
             {caught.distance ? (
-              <Text>
-                {`Your brains were eaten ${timerFormat(caught.time)} in at${
+              <Text style={styles.zombieStatus}>
+                {`Your brains were eaten ${timerFormat(caught.time)} in at ${
                   caught.distance / 1000
-                }km`}
+                } km`}
               </Text>
             ) : (
-              <Text>
+              <Text style={styles.zombieStatus}>
                 {`You live to run another day. The zombie was ${parseFloat(
                   ((distance - zombieDistance) / 1000).toFixed(3)
                 )}km behind you!`}
               </Text>
             )}
-            <RunData
+            <RunFinish
               counter={counter}
               distance={distance}
               speed={speed}
-              stop={stop}
               position={position}
               caught={caught}
               zombiePositionArray={zombiePositionArray(
@@ -304,8 +379,45 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
   },
+  pausebtn: {
+    borderRadius: 300,
+    backgroundColor: "green",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 21,
+    width: 70,
+    height: 70,
+  },
+  stopbtn: {
+    borderRadius: 300,
+    backgroundColor: "red",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 17,
+    paddingVertical: 20,
+    width: 70,
+    height: 70,
+  },
   btnPosition: {
     marginLeft: "34%",
     marginTop: 15,
+    width: 70,
+    height: 70,
+  },
+  btnPositionPause: {
+    marginTop: 170,
+    width: 70,
+    height: 70,
+  },
+  zombieStatus: {
+    color: "white",
+    marginHorizontal: "10%",
+    textAlign: "center",
+    marginBottom: 0,
+    marginTop: 10,
+    fontSize: 16,
   },
 });
