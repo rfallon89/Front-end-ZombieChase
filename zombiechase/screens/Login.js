@@ -41,7 +41,7 @@ export default function ({ navigation }) {
   const attemptLogin = () => {
     if (!passwordFail && !emailFail) {
       axios
-        .post("http://192.168.0.5:5000/login", {
+        .post("https://zombie-run.onrender.com/login", {
           email: email.toLowerCase(),
           password: password,
         })
