@@ -3,9 +3,10 @@ import { StyleSheet } from "react-native";
 import runner from "../assets/runner.png";
 import zombie from "../assets/zombie.png";
 import start from "../assets/start.png";
+import grave from "../assets/grave.png";
 import { useEffect, useState } from "react";
 
-export const Map = ({ position, zombiePositionArray }) => {
+export const Map = ({ position, zombiePositionArray, caught }) => {
   const [runtype, setRunType] = useState("");
   useEffect(() => {
     zombiePositionArray ? setRunType("Chase") : setRunType("Normal");
@@ -57,11 +58,19 @@ export const Map = ({ position, zombiePositionArray }) => {
         />
       ) : null}
       {zombiePositionArray ? (
-        <Marker
-          title="Zombie"
-          icon={zombie}
-          coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
-        />
+        !caught.distance ? (
+          <Marker
+            title="Zombie"
+            icon={zombie}
+            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+          />
+        ) : (
+          <Marker
+            title="Caught"
+            icon={grave}
+            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+          />
+        )
       ) : null}
     </MapView>
   );

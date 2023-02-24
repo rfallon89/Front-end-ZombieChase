@@ -21,20 +21,24 @@ import Background from "../assets/Background.png";
 import distanceIcon from "../assets/distanceIcon.png";
 import paceIcon from "../assets/paceIcon.png";
 import runner from "../assets/runner.png";
-import zombieRunner from "../assets/zombie.png";
+import zombieRunner from "../assets/zombieRunner.png";
+import finishFlag from "../assets/finishFlag.png";
+import startLine from "../assets/startLine.png";
 
 export default function ZombieChase() {
   //----------------------Dropdown------------------------------
   const [pick, setPick] = useState("Difficulty Mode:");
   const [expanded, setExpanded] = useState(false);
   const handlePress = () => setExpanded(!expanded);
+  //----------------------Progress Bar--------------------------
+  const [zombieProgress, setZombieProgress] = useState(30);
+  const [runnerProgress, setRunnerProgress] = useState(30);
   //----------------------Zombie States-------------------------
   const [zombiePace, setZombiePace] = useState(0);
   const [chaseDistance, setChaseDistance] = useState(0);
   const [showStart, setShowStart] = useState(false);
   const [zombieDistance, setZombieDistance] = useState(0);
   const [caught, setCaught] = useState({});
-  const [zombieProgress, setZombieProgress] = useState(0);
   //------------------------Run Data----------------------------
   const [position, setPosition] = useState([]);
   const [speed, setSpeed] = useState([]);
@@ -50,13 +54,12 @@ export default function ZombieChase() {
   const [stop, setStop] = useState(false);
   const [pause, setPause] = useState(false);
   //------------------Chase Set Up------------------------------
-  useEffect(
-    () =>
-      zombiePace != 0 && chaseDistance != 0
-        ? setShowStart(true)
-        : setShowStart(false),
-    [zombiePace, chaseDistance]
-  );
+  useEffect(() => {
+    if (zombiePace != 0 && chaseDistance != 0) {
+      setShowStart(true);
+      return;
+    }
+  }, [zombiePace, chaseDistance]);
   //--------------------Location Permission---------------------
   useEffect(() => {
     const permissionRequest = async () => {
@@ -68,21 +71,30 @@ export default function ZombieChase() {
     };
     permissionRequest();
     startAudio();
+    setPosition([]);
   }, []);
   //--------------------------Check Chase Status---------------
   useEffect(() => {
-    if (zombieDistance > 0) {
-      setZombieProgress(zombieDistance / distance);
+    if (counter != 0) {
+      setRunnerProgress(30 + 200 * (distance / (chaseDistance * 1000)));
+
+      if (!caught.distance) {
+        if (zombieDistance > 0) {
+          setZombieProgress(
+            30 + 200 * (zombieDistance / (chaseDistance * 1000))
+          );
+        }
+      }
+      if (zombieDistance >= distance && distance != 0 && !caught.distance) {
+        zombieAudio();
+        setCaught({ distance: distance, time: counter });
+        clearInterval(zombie);
+      }
+      if (distance >= chaseDistance * 1000 && distance != 0) {
+        stopRun();
+      }
     }
-    if (zombieDistance >= distance && distance != 0 && !caught.distance) {
-      zombieAudio();
-      setCaught({ distance: distance, time: counter });
-      clearInterval(zombie);
-    }
-    if (distance >= chaseDistance * 1000 && distance != 0) {
-      stopRun();
-    }
-  }, [distance]);
+  }, [counter]);
   //---------------------------Track Run-----------------------
   useEffect(() => {
     const startRun = async () => {
@@ -97,7 +109,6 @@ export default function ZombieChase() {
             latitude: coords.latitude,
             longitude: coords.longitude,
           };
-
           setPosition((cur) => {
             setDistance(
               geolib.getPathLength([...cur, latLong], geolib.getPreciseDistance)
@@ -113,10 +124,10 @@ export default function ZombieChase() {
   }, [start]);
   //--------------------------Start Run------------------------
   const commence = () => {
-    setStart(true);
-    setPause(false);
     startAudio(1);
     setTimeout(() => {
+      setStart(true);
+      setPause(false);
       let count = setInterval(() => {
         setCounter((curr) => curr + 1);
       }, 1000);
@@ -152,6 +163,7 @@ export default function ZombieChase() {
     clearInterval(zombie);
   };
   console.log(zombieProgress);
+  console.log(runnerProgress);
   //------------------------------------------------------------
   return (
     <View style={{ flex: 1 }}>
@@ -231,11 +243,25 @@ export default function ZombieChase() {
               position={position}
             />
             <Image
+              source={finishFlag}
+              style={{
+                position: "absolute",
+                top: 220,
+                left: 255,
+                zIndex: 1,
+              }}
+            />
+            <Image
               source={zombieRunner}
-              style={{ position: "absolute", top: 220, left: 23 }}
+              style={{
+                position: "absolute",
+                top: 217,
+                left: zombieProgress,
+                zIndex: 1,
+              }}
             />
             <ProgressBar
-              progress={zombieProgress}
+              progress={1}
               color="green"
               style={{
                 width: "60%",
@@ -246,7 +272,16 @@ export default function ZombieChase() {
             />
             <Image
               source={runner}
-              style={{ position: "absolute", top: 220, right: 23 }}
+              style={{ position: "absolute", top: 220, left: runnerProgress }}
+            />
+            <Image
+              source={startLine}
+              style={{
+                position: "absolute",
+                top: 220,
+                left: 15,
+                zIndex: 1,
+              }}
             />
             <View
               style={{ flexDirection: "row", justifyContent: "space-evenly" }}
@@ -275,13 +310,26 @@ export default function ZombieChase() {
               stop={stop}
               position={position}
             />
-
+            <Image
+              source={finishFlag}
+              style={{
+                position: "absolute",
+                top: 220,
+                left: 255,
+                zIndex: 1,
+              }}
+            />
             <Image
               source={zombieRunner}
-              style={{ position: "absolute", top: 220, left: 23 }}
+              style={{
+                position: "absolute",
+                top: 217,
+                left: zombieProgress,
+                zIndex: 1,
+              }}
             />
             <ProgressBar
-              progress={zombieProgress}
+              progress={1}
               color="green"
               style={{
                 width: "60%",
@@ -292,9 +340,17 @@ export default function ZombieChase() {
             />
             <Image
               source={runner}
-              style={{ position: "absolute", top: 220, right: 23 }}
+              style={{ position: "absolute", top: 220, left: runnerProgress }}
             />
-
+            <Image
+              source={startLine}
+              style={{
+                position: "absolute",
+                top: 220,
+                left: 3,
+                zIndex: 1,
+              }}
+            />
             <View
               style={{
                 flexDirection: "row",

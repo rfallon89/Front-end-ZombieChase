@@ -7,6 +7,8 @@ export const zombiePositionArray = (position, zombieDistance, index = 1) => {
       getPathLength(position.slice(0, index), getPreciseDistance)
     ) {
       return position.slice(0, index);
+    } else if (index === position.length - 1) {
+      return position;
     } else {
       return zombiePositionArray(position, zombieDistance, index + 1);
     }
