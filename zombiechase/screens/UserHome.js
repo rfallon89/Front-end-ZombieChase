@@ -2,22 +2,25 @@ import axios from "axios";
 import { useContext, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { userContext } from "../component/UserContext";
+import { getUser } from "../utils/api";
 
 export default function UserHome({ route, navigation }) {
   const { responseToken } = route.params;
-  const { user, setUser, token, setToken, setIsLoggedIn } =
-    useContext(userContext);
+  const { setUser, setToken, setIsLoggedIn } = useContext(userContext);
 
   useEffect(() => {
-    axios
-      .get(`http://192.168.0.5:5000/user?secret_token=${responseToken}`)
-      .then(({ data }) => {
+    getUser(responseToken)
+      .then((data) => {
         console.log(data);
         setUser(data.user);
         setToken(data.token);
         setIsLoggedIn(true);
       })
       .catch((err) => {
+        setUser({});
+        setToken("");
+        setIsLoggedIn(false);
+        navigation.navigate("Login");
         console.log(err);
       });
   }, []);

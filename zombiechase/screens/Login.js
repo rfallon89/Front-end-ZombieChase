@@ -11,6 +11,7 @@ import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
 import { styles } from "../component/styles";
 import { userContext } from "../component/UserContext";
 import { useIsFocused } from "@react-navigation/native";
+import { login } from "../utils/api";
 
 export default function ({ navigation }) {
   const [email, setEmail] = useState("");
@@ -40,14 +41,11 @@ export default function ({ navigation }) {
 
   const attemptLogin = () => {
     if (!passwordFail && !emailFail) {
-      axios
-        .post("https://zombie-run.onrender.com/login", {
-          email: email.toLowerCase(),
-          password: password,
-        })
-        .then(({ data }) => {
+      axios;
+      login(email, password)
+        .then((data) => {
           setLoginFail(false);
-
+          console.log("login passed");
           navigation.navigate("UserHome", {
             responseToken: data.token,
           });

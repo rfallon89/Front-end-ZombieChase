@@ -4,6 +4,7 @@ import { View, TouchableOpacity, ImageBackground } from "react-native";
 import { styles } from "../component/styles";
 import background from "../assets/zombie_run_design.png";
 import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
+import { signup } from "../utils/api";
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ export default function Signup({ navigation }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [profile_image_url, setProfileImageUrl] = useState("");
+  const [signupFail, setSignupFail] = useState(false);
   const [usernameFail, setUsernameFail] = useState(false);
   const [emailFail, setEmailFail] = useState(false);
   const [nameFail, setNameFail] = useState(false);
@@ -32,19 +34,20 @@ export default function Signup({ navigation }) {
   };
 
   const attemptSignup = () => {
+    const user = {
+      username,
+      email,
+      name,
+      password,
+      profile_image_url,
+    };
     if (!(usernameFail & emailFail & nameFail & passwordFail)) {
-      axios
-        .post("http://192.168.0.5:5000/signup", {
-          username: username,
-          email: email,
-          name: name,
-          password: password,
-          profile_image_url: profile_image_url,
-        })
-        .then(({ data }) => {
+      signup(user)
+        .then((data) => {
           navigation.navigate("Login");
         })
         .catch((err) => {
+          setSignupFail(true);
           console.log(err);
         });
     }
@@ -61,7 +64,9 @@ export default function Signup({ navigation }) {
           <Text variant="headlineLarge" style={{ color: "white" }}>
             Sign up
           </Text>
-
+          <HelperText type="error" visible={signupFail}>
+            Please enter a valid username
+          </HelperText>
           <HelperText type="error" visible={usernameFail}>
             Please enter a valid username
           </HelperText>
