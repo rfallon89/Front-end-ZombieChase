@@ -1,9 +1,17 @@
-import { View, Button } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
 import { RunData } from "../component/runDataCard";
 import startAudio from "../utils/startRace";
+import Background from "../assets/Background.png";
+import { RunFinish } from "../component/runFinish";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
@@ -17,6 +25,7 @@ export default function StartRun() {
   //--------------------------------------------------------------------------------------
   const [start, setStart] = useState(false);
   const [stop, setStop] = useState(false);
+  const [pause, setPause] = useState(false);
   //--------------------------------------------------------------------------------------
   useEffect(() => {
     const permissionRequest = async () => {
@@ -45,10 +54,7 @@ export default function StartRun() {
 
           setPosition((cur) => {
             setDistance(
-              geolib.getPathLength(
-                [...cur, latLong],
-                geolib.getPreciseDistance
-              ) / 1000
+              geolib.getPathLength([...cur, latLong], geolib.getPreciseDistance)
             );
             return [...cur, latLong];
           });
@@ -61,8 +67,9 @@ export default function StartRun() {
   }, [start]);
   //--------------------------------------------------------------------------------------
   const commence = () => {
+    startAudio(1);
     setStart(true);
-    startAudio();
+    setPause(false);
     setTimeout(() => {
       let count = setInterval(() => {
         setCounter((curr) => curr + 1);
@@ -72,6 +79,7 @@ export default function StartRun() {
   };
   //--------------------------------------------------------------------------------------
   const PauseRun = () => {
+    setPause(true);
     setStart(false);
     if (tracker) {
       tracker.remove();
@@ -91,41 +99,133 @@ export default function StartRun() {
   };
   //--------------------------------------------------------------------------------------
   return (
-    <View>
-      {!start && !stop ? (
-        <View>
-          <RunData
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={Background}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        {!start && !pause && !stop ? (
+          <View>
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+            />
+            <TouchableOpacity onPress={commence} style={styles.btnPosition}>
+              <Text style={styles.startbtn}>Start</Text>
+            </TouchableOpacity>
+          </View>
+        ) : pause && !stop ? (
+          <View>
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+            />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              <TouchableOpacity
+                onPress={commence}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.startbtn}>Start</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={stopRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.stopbtn}>Stop</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : !stop && start ? (
+          <View>
+            <RunData
+              counter={counter}
+              distance={distance}
+              speed={speed}
+              stop={stop}
+              position={position}
+            />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              <TouchableOpacity
+                onPress={PauseRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.pausebtn}>Pause</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={stopRun}
+                style={styles.btnPositionPause}
+              >
+                <Text style={styles.stopbtn}>Stop</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <RunFinish
             counter={counter}
             distance={distance}
             speed={speed}
-            stop={stop}
             position={position}
           />
-          <Button onPress={commence} title="Start" color="green" />
-        </View>
-      ) : !stop && start ? (
-        <View>
-          <RunData
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            stop={stop}
-            position={position}
-          />
-          <Button onPress={PauseRun} title="Pause" color="green" />
-          <Button onPress={stopRun} title="Stop" color="red" />
-        </View>
-      ) : (
-        <View>
-          <RunData
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            stop={stop}
-            position={position}
-          />
-        </View>
-      )}
+        )}
+      </ImageBackground>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  startbtn: {
+    borderRadius: 300,
+    backgroundColor: "green",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    width: 70,
+    height: 70,
+  },
+  pausebtn: {
+    borderRadius: 300,
+    backgroundColor: "green",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 21,
+    width: 70,
+    height: 70,
+  },
+  stopbtn: {
+    borderRadius: 300,
+    backgroundColor: "red",
+    color: "white",
+    fontSize: 18,
+    justifyContent: "center",
+    paddingHorizontal: 17,
+    paddingVertical: 20,
+    width: 70,
+    height: 70,
+  },
+  btnPosition: {
+    marginLeft: "39%",
+    marginTop: 55,
+    width: 70,
+    height: 70,
+  },
+  btnPositionPause: {
+    marginTop: 100,
+    width: 70,
+    height: 70,
+  },
+});

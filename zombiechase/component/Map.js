@@ -3,12 +3,18 @@ import { StyleSheet } from "react-native";
 import runner from "../assets/runner.png";
 import zombie from "../assets/zombie.png";
 import start from "../assets/start.png";
+import grave from "../assets/grave.png";
+import { useEffect, useState } from "react";
 
-export const Map = ({ position, zombiePositionArray }) => {
-  console.log(position);
+export const Map = ({ position, zombiePositionArray, caught }) => {
+  const [runtype, setRunType] = useState("");
+  useEffect(() => {
+    zombiePositionArray ? setRunType("Chase") : setRunType("Normal");
+  }, []);
+
   return (
     <MapView
-      style={styles.map}
+      style={styles[`map${runtype}`]}
       customMapStyle={mapStyle}
       initialRegion={{
         latitude: position[0].latitude,
@@ -52,11 +58,19 @@ export const Map = ({ position, zombiePositionArray }) => {
         />
       ) : null}
       {zombiePositionArray ? (
-        <Marker
-          title="Zombie"
-          icon={zombie}
-          coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
-        />
+        !caught.distance ? (
+          <Marker
+            title="Zombie"
+            icon={zombie}
+            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+          />
+        ) : (
+          <Marker
+            title="Caught"
+            icon={grave}
+            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+          />
+        )
       ) : null}
     </MapView>
   );
@@ -163,8 +177,16 @@ let mapStyle = [
   },
 ];
 const styles = StyleSheet.create({
-  map: {
-    width: "100%",
-    height: "70%",
+  mapChase: {
+    width: "90%",
+    height: "65%",
+    marginHorizontal: 15,
+    marginVertical: 15,
+  },
+  mapNormal: {
+    width: "90%",
+    height: "75%",
+    marginHorizontal: 15,
+    marginVertical: 15,
   },
 });
