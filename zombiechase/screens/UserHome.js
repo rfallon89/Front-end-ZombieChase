@@ -11,7 +11,6 @@ export default function UserHome({ route, navigation }) {
   useEffect(() => {
     getUser(responseToken)
       .then((data) => {
-        console.log(data);
         setUser(data.user);
         setToken(data.token);
         setIsLoggedIn(true);
@@ -21,7 +20,6 @@ export default function UserHome({ route, navigation }) {
         setToken("");
         setIsLoggedIn(false);
         navigation.navigate("Login");
-        console.log(err);
       });
   }, []);
 
@@ -45,7 +43,6 @@ export default function UserHome({ route, navigation }) {
   return (
     <View>
       <Text style={styles.red}>UserName</Text>
-      {/* <Image>User Avatar</Image> */}
       <TouchableOpacity onPress={Go}>
         <Text>Start Run </Text>
       </TouchableOpacity>

@@ -6,8 +6,6 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [token, setToken] = useState("");
-  console.log("usercontext user", user);
-  console.log("usercontext token", token);
 
   return (
     <userContext.Provider

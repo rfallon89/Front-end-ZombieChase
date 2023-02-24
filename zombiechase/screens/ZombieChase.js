@@ -162,8 +162,6 @@ export default function ZombieChase() {
     clearInterval(timer);
     clearInterval(zombie);
   };
-  console.log(zombieProgress);
-  console.log(runnerProgress);
   //------------------------------------------------------------
   return (
     <View style={{ flex: 1 }}>
@@ -279,7 +277,7 @@ export default function ZombieChase() {
               style={{
                 position: "absolute",
                 top: 220,
-                left: 15,
+                left: 3,
                 zIndex: 1,
               }}
             />
