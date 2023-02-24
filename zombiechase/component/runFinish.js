@@ -7,13 +7,18 @@ export const RunFinish = ({
   counter,
   distance,
   speed,
+  caught,
   position,
   zombiePositionArray,
 }) => {
   return (
     <View>
       {zombiePositionArray ? (
-        <Map position={position} zombiePositionArray={zombiePositionArray} />
+        <Map
+          position={position}
+          zombiePositionArray={zombiePositionArray}
+          caught={caught}
+        />
       ) : (
         <Map position={position} />
       )}
