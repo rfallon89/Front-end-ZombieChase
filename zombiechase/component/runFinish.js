@@ -16,9 +16,10 @@ export const RunFinish = ({
 }) => {
   const { user, token } = useContext(userContext);
   const run_data = {
+    position: position,
     distance: distance,
-    time: timerFormat(counter),
-    pace: parseFloat(avgSpeed(speed).toFixed(2)),
+    time: counter,
+    pace: speed,
     caught: caught,
     zombiePosition: zombiePositionArray,
   };

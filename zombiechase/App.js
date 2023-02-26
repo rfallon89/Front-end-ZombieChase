@@ -8,6 +8,7 @@ import RunHistory from "./screens/RunHistory";
 import ZombieChase from "./screens/ZombieChase";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
+import ViewRun from "./screens/ViewRun";
 import { UserProvider } from "./component/UserContext";
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,11 @@ export default function App() {
           <Stack.Screen
             name="ZombieChase"
             component={ZombieChase}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="ViewRun"
+            component={ViewRun}
             options={{ title: "" }}
           />
         </Stack.Navigator>

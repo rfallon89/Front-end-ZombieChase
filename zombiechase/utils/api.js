@@ -30,7 +30,7 @@ export const postRun = (user_id, token, run_data) => {
   const body = {
     user_id: user_id,
     run_data: run_data,
-    created_at: new Date(Date.now()).toISOString(),
+    created_at: new Date(Date.now()).toDateString(),
   };
   return api
     .post(`/runs?secret_token=${token}`, body)
