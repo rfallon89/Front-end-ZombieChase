@@ -1,8 +1,18 @@
-import axios from "axios";
 import { useContext, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+  Image,
+} from "react-native";
 import { userContext } from "../component/UserContext";
 import { getUser } from "../utils/api";
+import Background from "../assets/Background.png";
+import zombieGrave from "../assets/zombieGrave.png";
+import runIcon from "../assets/runIcon.png";
+import histroy from "../assets/history.png";
 
 export default function UserHome({ route, navigation }) {
   const { responseToken } = route.params;
@@ -11,7 +21,6 @@ export default function UserHome({ route, navigation }) {
   useEffect(() => {
     getUser(responseToken)
       .then((data) => {
-        console.log(data);
         setUser(data.user);
         setToken(data.token);
         setIsLoggedIn(true);
@@ -21,7 +30,6 @@ export default function UserHome({ route, navigation }) {
         setToken("");
         setIsLoggedIn(false);
         navigation.navigate("Login");
-        console.log(err);
       });
   }, []);
 
@@ -36,42 +44,68 @@ export default function UserHome({ route, navigation }) {
     navigation.push("Run");
   };
   const ZombieChase = () => {
-    navigation.push("ZombieChase");
+    navigation.push("ChaseSetup");
   };
   const RunHistory = () => {
     navigation.push("RunHistory");
   };
 
   return (
-    <View>
-      <Text style={styles.red}>UserName</Text>
-      {/* <Image>User Avatar</Image> */}
-      <TouchableOpacity onPress={Go}>
-        <Text>Start Run </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={ZombieChase}>
-        <Text>Zombie Chase </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={RunHistory}>
-        <Text> Previous Runs</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={signOut}>
-        <Text> Sign out</Text>
-      </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={Background}
+        resizeMode="cover"
+        style={{ flex: 1, paddingTop: 50 }}
+      >
+        <Text>UserName</Text>
+        <TouchableOpacity onPress={Go} style={styles.card}>
+          <Image source={runIcon} />
+          <Text style={styles.textRun}>Start Run </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={ZombieChase} style={styles.card}>
+          <Image source={zombieGrave} />
+          <Text style={styles.textZombie}>Zombie Chase </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={RunHistory} style={styles.card}>
+          <Image source={histroy} />
+          <Text style={styles.textHistory}> Run History</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={signOut}>
+          <Text> Sign out</Text>
+        </TouchableOpacity>
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#a599ad",
+    width: 200,
+    margin: 7,
+    elevation: 20,
+    shadowColor: "white",
+    padding: 12,
+    borderRadius: 10,
+    marginLeft: 55,
   },
-  bigBlue: {
-    color: "blue",
-    fontWeight: "bold",
-    fontSize: 30,
+  textRun: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginLeft: 24,
+    marginTop: 10,
   },
-  red: {
-    color: "red",
+  textZombie: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginLeft: 11,
+    marginTop: 17,
+  },
+  textHistory: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginLeft: 15,
+    marginTop: 15,
   },
 });

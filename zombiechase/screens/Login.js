@@ -49,7 +49,6 @@ export default function ({ navigation }) {
       login(email, password)
         .then((data) => {
           setLoginFail(false);
-          console.log("login passed");
           navigation.navigate("UserHome", {
             responseToken: data.token,
           });

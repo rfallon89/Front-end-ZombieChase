@@ -2,23 +2,34 @@ import avgSpeed from "../utils/avgSpeed";
 import { timerFormat } from "../utils/timerFormat";
 import { Map } from "./Map";
 import { View, Text, StyleSheet } from "react-native";
+import { postRun } from "../utils/api";
+import { userContext } from "../component/UserContext";
+import { useContext, useEffect } from "react";
 
 export const RunFinish = ({
   counter,
-  distance,
-  speed,
   caught,
-  position,
-  zombiePositionArray,
+  runData: { distance, speed, position },
+  zombieRoute,
 }) => {
+  const {
+    user: { _id },
+    token,
+  } = useContext(userContext);
+  const run_data = {
+    runData: { distance, speed, position },
+    time: counter,
+    caught: caught,
+    zombieRoute: zombieRoute,
+  };
+  useEffect(() => {
+    postRun(_id, token, run_data);
+  }, []);
+
   return (
     <View>
-      {zombiePositionArray ? (
-        <Map
-          position={position}
-          zombiePositionArray={zombiePositionArray}
-          caught={caught}
-        />
+      {zombieRoute ? (
+        <Map position={position} zombieRoute={zombieRoute} caught={caught} />
       ) : (
         <Map position={position} />
       )}

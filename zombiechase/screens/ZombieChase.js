@@ -15,34 +15,28 @@ import zombieAudio from "../utils/zombieAudio";
 import startAudio from "../utils/startRace";
 import { timerFormat } from "../utils/timerFormat";
 import { zombiePositionArray } from "../utils/zombiePosition";
-import { List, TextInput, ProgressBar } from "react-native-paper";
-import zombieHead from "../assets/zombieHead.png";
+import { ProgressBar } from "react-native-paper";
 import Background from "../assets/Background.png";
-import distanceIcon from "../assets/distanceIcon.png";
-import paceIcon from "../assets/paceIcon.png";
 import runner from "../assets/runner.png";
 import zombieRunner from "../assets/zombieRunner.png";
 import finishFlag from "../assets/finishFlag.png";
 import startLine from "../assets/startLine.png";
 
-export default function ZombieChase() {
-  //----------------------Dropdown------------------------------
-  const [pick, setPick] = useState("Difficulty Mode:");
-  const [expanded, setExpanded] = useState(false);
-  const handlePress = () => setExpanded(!expanded);
+export default function ZombieChase({ route }) {
+  const { zombiePace, chaseDistance, zombieStart } = route.params;
+
   //----------------------Progress Bar--------------------------
   const [zombieProgress, setZombieProgress] = useState(30);
   const [runnerProgress, setRunnerProgress] = useState(30);
   //----------------------Zombie States-------------------------
-  const [zombiePace, setZombiePace] = useState(0);
-  const [chaseDistance, setChaseDistance] = useState(0);
-  const [showStart, setShowStart] = useState(false);
-  const [zombieDistance, setZombieDistance] = useState(0);
+  const [zombieDistance, setZombieDistance] = useState(zombieStart);
   const [caught, setCaught] = useState({});
   //------------------------Run Data----------------------------
-  const [position, setPosition] = useState([]);
-  const [speed, setSpeed] = useState([]);
-  const [distance, setDistance] = useState(0);
+  const [runData, setRunData] = useState({
+    position: [],
+    distance: 0,
+    speed: [],
+  });
   //------------------------Timer Data--------------------------
   const [counter, setCounter] = useState(0);
   //------------------------SetInterval States------------------
@@ -53,30 +47,16 @@ export default function ZombieChase() {
   const [start, setStart] = useState(false);
   const [stop, setStop] = useState(false);
   const [pause, setPause] = useState(false);
-  //------------------Chase Set Up------------------------------
-  useEffect(() => {
-    if (zombiePace != 0 && chaseDistance != 0) {
-      setShowStart(true);
-      return;
-    }
-  }, [zombiePace, chaseDistance]);
-  //--------------------Location Permission---------------------
-  useEffect(() => {
-    const permissionRequest = async () => {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (!granted) {
-        console.log("location tracking denied");
-        return;
-      }
-    };
-    permissionRequest();
-    startAudio();
-    setPosition([]);
-  }, []);
   //--------------------------Check Chase Status---------------
   useEffect(() => {
+    if (counter === 0) {
+      startAudio();
+      setRunData((cur) => {
+        return { ...cur, position: [] };
+      });
+    }
     if (counter != 0) {
-      setRunnerProgress(30 + 200 * (distance / (chaseDistance * 1000)));
+      setRunnerProgress(30 + 200 * (runData.distance / (chaseDistance * 1000)));
 
       if (!caught.distance) {
         if (zombieDistance > 0) {
@@ -85,12 +65,16 @@ export default function ZombieChase() {
           );
         }
       }
-      if (zombieDistance >= distance && distance != 0 && !caught.distance) {
+      if (
+        zombieDistance >= runData.distance &&
+        runData.distance != 0 &&
+        !caught.distance
+      ) {
         zombieAudio();
-        setCaught({ distance: distance, time: counter });
+        setCaught({ distance: runData.distance, time: counter });
         clearInterval(zombie);
       }
-      if (distance >= chaseDistance * 1000 && distance != 0) {
+      if (runData.distance >= chaseDistance * 1000 && runData.distance != 0) {
         stopRun();
       }
     }
@@ -109,13 +93,16 @@ export default function ZombieChase() {
             latitude: coords.latitude,
             longitude: coords.longitude,
           };
-          setPosition((cur) => {
-            setDistance(
-              geolib.getPathLength([...cur, latLong], geolib.getPreciseDistance)
-            );
-            return [...cur, latLong];
+          setRunData((cur) => {
+            return {
+              position: [...cur.position, latLong],
+              distance: geolib.getPathLength(
+                [...cur.position, latLong],
+                geolib.getPreciseDistance
+              ),
+              speed: [...cur.speed, coords.speed],
+            };
           });
-          setSpeed((cur) => [...cur, coords.speed]);
         }
       );
       setTracker(tracking);
@@ -123,7 +110,7 @@ export default function ZombieChase() {
     start ? startRun() : null;
   }, [start]);
   //--------------------------Start Run------------------------
-  const commence = () => {
+  const startRun = () => {
     startAudio(1);
     setTimeout(() => {
       setStart(true);
@@ -154,6 +141,7 @@ export default function ZombieChase() {
   //------------------------------------------------------------
   const stopRun = () => {
     setStart(false);
+    setPause(false);
     setStop(true);
     if (tracker) {
       tracker.remove();
@@ -162,8 +150,6 @@ export default function ZombieChase() {
     clearInterval(timer);
     clearInterval(zombie);
   };
-  console.log(zombieProgress);
-  console.log(runnerProgress);
   //------------------------------------------------------------
   return (
     <View style={{ flex: 1 }}>
@@ -172,144 +158,9 @@ export default function ZombieChase() {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-        {!start && !stop && !pause ? (
-          //----------------------Set Up Render-------------------------
-          <View style={styles.container}>
-            <TextInput
-              onChangeText={setZombiePace}
-              value={zombiePace}
-              keyboardType="numeric"
-              mode="outlined"
-              label={"Zombie Pace (km/hr)"}
-              right={<TextInput.Icon icon={paceIcon} />}
-            />
-            <TextInput
-              onChangeText={setChaseDistance}
-              value={chaseDistance}
-              keyboardType="numeric"
-              mode="outlined"
-              label={"Chase Distance (km)"}
-              right={<TextInput.Icon icon={distanceIcon} />}
-            />
-            <List.Section title="" style={styles.drop}>
-              <List.Accordion
-                title={`${pick}`}
-                left={(props) => <List.Icon {...props} icon={zombieHead} />}
-                expanded={expanded}
-                onPress={handlePress}
-                theme={{ colors: { background: `#E6E6FA` } }}
-              >
-                <List.Item
-                  title="Easy"
-                  onPress={() => {
-                    setPick("Easy");
-                    setZombieDistance(-50);
-                    handlePress();
-                  }}
-                  style={styles.drop}
-                />
-                <List.Item
-                  title="Medium"
-                  onPress={() => {
-                    setPick("Medium");
-                    setZombieDistance(-30);
-                    handlePress();
-                  }}
-                />
-                <List.Item
-                  title="Hard"
-                  onPress={() => {
-                    setPick("Hard");
-                    setZombieDistance(-10);
-                    handlePress();
-                  }}
-                />
-              </List.Accordion>
-            </List.Section>
-            {showStart ? (
-              <TouchableOpacity onPress={commence} style={styles.btnPosition}>
-                <Text style={styles.startbtn}>Start</Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-        ) : pause && !stop ? (
-          //-----------------------Pause Render---------------------------
+        {!stop ? (
           <View>
-            <RunData
-              counter={counter}
-              distance={distance}
-              speed={speed}
-              stop={stop}
-              position={position}
-            />
-            <Image
-              source={finishFlag}
-              style={{
-                position: "absolute",
-                top: 220,
-                left: 255,
-                zIndex: 1,
-              }}
-            />
-            <Image
-              source={zombieRunner}
-              style={{
-                position: "absolute",
-                top: 217,
-                left: zombieProgress,
-                zIndex: 1,
-              }}
-            />
-            <ProgressBar
-              progress={1}
-              color="green"
-              style={{
-                width: "60%",
-                position: "absolute",
-                right: "19%",
-                top: 80,
-              }}
-            />
-            <Image
-              source={runner}
-              style={{ position: "absolute", top: 220, left: runnerProgress }}
-            />
-            <Image
-              source={startLine}
-              style={{
-                position: "absolute",
-                top: 220,
-                left: 15,
-                zIndex: 1,
-              }}
-            />
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-            >
-              <TouchableOpacity
-                onPress={commence}
-                style={styles.btnPositionPause}
-              >
-                <Text style={styles.startbtn}>Start</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={stopRun}
-                style={styles.btnPositionPause}
-              >
-                <Text style={styles.stopbtn}>Stop</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : !stop && start ? (
-          //-------------------------Restart After Pause Render-----------
-          <View>
-            <RunData
-              counter={counter}
-              distance={distance}
-              speed={speed}
-              stop={stop}
-              position={position}
-            />
+            <RunData counter={counter} runData={runData} />
             <Image
               source={finishFlag}
               style={{
@@ -351,25 +202,48 @@ export default function ZombieChase() {
                 zIndex: 1,
               }}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <TouchableOpacity
-                onPress={PauseRun}
-                style={styles.btnPositionPause}
-              >
-                <Text style={styles.pausebtn}>Pause</Text>
+            {!start && !pause ? (
+              <TouchableOpacity onPress={startRun} style={styles.btnPosition}>
+                <Text style={styles.startbtn}>Start</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={stopRun}
-                style={styles.btnPositionPause}
+            ) : pause && !start ? (
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-evenly" }}
               >
-                <Text style={styles.stopbtn}>Stop</Text>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity
+                  onPress={startRun}
+                  style={styles.btnPositionPause}
+                >
+                  <Text style={styles.startbtn}>Start</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={stopRun}
+                  style={styles.btnPositionPause}
+                >
+                  <Text style={styles.stopbtn}>Stop</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={PauseRun}
+                  style={styles.btnPositionPause}
+                >
+                  <Text style={styles.pausebtn}>Pause</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={stopRun}
+                  style={styles.btnPositionPause}
+                >
+                  <Text style={styles.stopbtn}>Stop</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         ) : (
           //--------------------------Stop Render---------------------------
@@ -383,18 +257,16 @@ export default function ZombieChase() {
             ) : (
               <Text style={styles.zombieStatus}>
                 {`You live to run another day. The zombie was ${parseFloat(
-                  ((distance - zombieDistance) / 1000).toFixed(3)
+                  ((runData.distance - zombieDistance) / 1000).toFixed(3)
                 )}km behind you!`}
               </Text>
             )}
             <RunFinish
               counter={counter}
-              distance={distance}
-              speed={speed}
-              position={position}
+              runData={runData}
               caught={caught}
-              zombiePositionArray={zombiePositionArray(
-                position,
+              zombieRoute={zombiePositionArray(
+                runData.position,
                 zombieDistance
               )}
             />
@@ -458,8 +330,8 @@ const styles = StyleSheet.create({
     height: 70,
   },
   btnPosition: {
-    marginLeft: "34%",
-    marginTop: 15,
+    marginLeft: "39%",
+    marginTop: 170,
     width: 70,
     height: 70,
   },

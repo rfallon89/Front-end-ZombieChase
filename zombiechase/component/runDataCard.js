@@ -1,7 +1,7 @@
 import { timerFormat } from "../utils/timerFormat";
 import { View, Text, StyleSheet } from "react-native";
 
-export const RunData = ({ counter, distance, speed }) => {
+export const RunData = ({ counter, runData: { distance, speed } }) => {
   return (
     <View>
       <View style={{ marginHorizontal: "25%", marginVertical: 20 }}>
