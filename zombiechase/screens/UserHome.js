@@ -44,7 +44,7 @@ export default function UserHome({ route, navigation }) {
     navigation.push("Run");
   };
   const ZombieChase = () => {
-    navigation.push("ZombieChase");
+    navigation.push("ChaseSetup");
   };
   const RunHistory = () => {
     navigation.push("RunHistory");

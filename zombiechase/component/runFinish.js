@@ -8,33 +8,28 @@ import { useContext, useEffect } from "react";
 
 export const RunFinish = ({
   counter,
-  distance,
-  speed,
   caught,
-  position,
-  zombiePositionArray,
+  runData: { distance, speed, position },
+  zombieRoute,
 }) => {
-  const { user, token } = useContext(userContext);
+  const {
+    user: { _id },
+    token,
+  } = useContext(userContext);
   const run_data = {
-    position: position,
-    distance: distance,
+    runData: { distance, speed, position },
     time: counter,
-    pace: speed,
     caught: caught,
-    zombiePosition: zombiePositionArray,
+    zombieRoute: zombieRoute,
   };
   useEffect(() => {
-    postRun(user._id, token, run_data);
+    postRun(_id, token, run_data);
   }, []);
 
   return (
     <View>
-      {zombiePositionArray ? (
-        <Map
-          position={position}
-          zombiePositionArray={zombiePositionArray}
-          caught={caught}
-        />
+      {zombieRoute ? (
+        <Map position={position} zombieRoute={zombieRoute} caught={caught} />
       ) : (
         <Map position={position} />
       )}

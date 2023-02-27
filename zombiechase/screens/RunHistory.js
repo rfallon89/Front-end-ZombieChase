@@ -14,11 +14,16 @@ import runner from "../assets/runner.png";
 import Background from "../assets/Background.png";
 
 export default function RunHistory({ navigation }) {
-  const { user, token } = useContext(userContext);
+  const {
+    user: { _id },
+    token,
+  } = useContext(userContext);
   const [runs, setRuns] = useState([]);
+
   useEffect(() => {
-    getRuns(user._id, token).then((res) => setRuns(res.reverse()));
+    getRuns(_id, token).then((res) => setRuns(res.reverse()));
   }, []);
+
   return runs.length > 0 ? (
     <View style={{ flex: 1, justifyContent: "center" }}>
       <ImageBackground
@@ -44,17 +49,17 @@ export default function RunHistory({ navigation }) {
                 }}
                 onPress={() =>
                   navigation.navigate("ViewRun", {
-                    runData: run_data[0],
+                    run_data: run_data,
                     created_at: created_at,
                   })
                 }
               >
-                <Image source={run_data[0].zombiePosition ? zombie : runner} />
+                <Image source={run_data.zombieRoute ? zombie : runner} />
                 <View style={{ marginLeft: 15, paddingTop: 10 }}>
                   <Text style={{ fontSize: 14, fontWeight: "500" }}>
                     {created_at ? created_at.slice(0, 10) : null}
                   </Text>
-                  <Text>{`${run_data[0].distance / 1000} km`}</Text>
+                  <Text>{`${run_data.runData.distance / 1000} km`}</Text>
                 </View>
               </TouchableOpacity>
             );

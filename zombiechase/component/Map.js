@@ -6,10 +6,10 @@ import start from "../assets/start.png";
 import grave from "../assets/grave.png";
 import { useEffect, useState } from "react";
 
-export const Map = ({ position, zombiePositionArray, caught }) => {
+export const Map = ({ position, zombieRoute, caught }) => {
   const [runtype, setRunType] = useState("");
   useEffect(() => {
-    zombiePositionArray ? setRunType("Chase") : setRunType("Normal");
+    zombieRoute ? setRunType("Chase") : setRunType("Normal");
   }, []);
 
   return (
@@ -42,9 +42,9 @@ export const Map = ({ position, zombiePositionArray, caught }) => {
         ]}
         strokeWidth={2}
       />
-      {zombiePositionArray ? (
+      {zombieRoute ? (
         <Polyline
-          coordinates={zombiePositionArray}
+          coordinates={zombieRoute}
           strokeColor="#00FF00"
           strokeColors={[
             "#7F0000",
@@ -57,18 +57,18 @@ export const Map = ({ position, zombiePositionArray, caught }) => {
           strokeWidth={2}
         />
       ) : null}
-      {zombiePositionArray ? (
+      {zombieRoute ? (
         !caught.distance ? (
           <Marker
             title="Zombie"
             icon={zombie}
-            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+            coordinate={zombieRoute[zombieRoute.length - 1]}
           />
         ) : (
           <Marker
             title="Caught"
             icon={grave}
-            coordinate={zombiePositionArray[zombiePositionArray.length - 1]}
+            coordinate={zombieRoute[zombieRoute.length - 1]}
           />
         )
       ) : null}
