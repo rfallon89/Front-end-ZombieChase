@@ -12,6 +12,7 @@ import { getRuns } from "../utils/api";
 import zombie from "../assets/zombieRunner.png";
 import runner from "../assets/runner.png";
 import Background from "../assets/Background.png";
+import { format } from "date-fns";
 
 export default function RunHistory({ navigation }) {
   const {
@@ -23,6 +24,14 @@ export default function RunHistory({ navigation }) {
   useEffect(() => {
     getRuns(_id, token).then((res) => setRuns(res.reverse()));
   }, []);
+
+  const dateFormate = (created_at) => {
+    const date = format(new Date(created_at), "MMM dd, yyyy hh:mm aaaaa'm'");
+
+    console.log(format(new Date(created_at), "MMM dd, yyyy hh:mm aaaaa'm'"));
+
+    return date;
+  };
 
   return runs.length > 0 ? (
     <View style={{ flex: 1, justifyContent: "center" }}>
@@ -57,7 +66,14 @@ export default function RunHistory({ navigation }) {
                 <Image source={run_data.zombieRoute ? zombie : runner} />
                 <View style={{ marginLeft: 15, paddingTop: 10 }}>
                   <Text style={{ fontSize: 14, fontWeight: "500" }}>
-                    {created_at ? created_at.slice(0, 10) : null}
+                    {created_at
+                      ? format(new Date(created_at), "MMM dd, yyyy")
+                      : null}
+                  </Text>
+                  <Text>
+                    {created_at
+                      ? format(new Date(created_at), "hh:mm aaaaa'm'")
+                      : null}
                   </Text>
                   <Text>{`${run_data.runData.distance / 1000} km`}</Text>
                 </View>
