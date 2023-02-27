@@ -65,7 +65,15 @@ export default function Signup({ navigation }) {
         style={styles.image}
       >
         <View style={styles.card}>
-          <Text variant="headlineLarge" style={{ color: "white" }}>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "right",
+              fontSize: 22,
+              fontWeight: "600",
+              marginTop: 8,
+            }}
+          >
             Sign up
           </Text>
           <HelperText type="error" visible={signupFail}>

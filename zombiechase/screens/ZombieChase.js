@@ -151,6 +151,7 @@ export default function ZombieChase({ route }) {
     clearInterval(zombie);
   };
   //------------------------------------------------------------
+
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground

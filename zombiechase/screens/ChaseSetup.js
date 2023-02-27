@@ -39,6 +39,9 @@ export default function ChaseSetup({ navigation }) {
         console.log("location tracking denied");
         return;
       }
+      const startLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.BestForNavigation,
+      });
     };
     permissionRequest();
   }, []);
@@ -57,7 +60,7 @@ export default function ChaseSetup({ navigation }) {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: 50 }}
       >
         <View style={styles.container}>
           <TextInput
