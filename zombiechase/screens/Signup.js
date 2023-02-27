@@ -23,13 +23,17 @@ export default function Signup({ navigation }) {
       setUsernameFail(!value.length > 0);
     }
     if (type === "email") {
-      setEmailFail(!/[@(),.?":{}|<>]/g.test(value));
+      setEmailFail(
+        !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g.test(
+          value
+        )
+      );
     }
     if (type === "name") {
       setNameFail(!value.length > 0);
     }
     if (type === "password") {
-      setPasswordFail(!value.length > 0);
+      setPasswordFail(!/^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/.test(value));
     }
   };
 
@@ -100,8 +104,12 @@ export default function Signup({ navigation }) {
             label="name"
             onBlur={() => validate("name", name)}
           />
-          <HelperText type="error" visible={passwordFail}>
-            Please enter a valid password
+          <HelperText
+            type="error"
+            visible={passwordFail}
+            style={styles.passwordHelperText}
+          >
+            Password must contain at least 7 letters and a special character
           </HelperText>
           <TextInput
             onChangeText={setPassword}

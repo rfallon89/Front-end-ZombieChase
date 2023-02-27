@@ -32,7 +32,11 @@ export default function ({ navigation }) {
 
   const validate = (type, value) => {
     if (type === "email") {
-      setEmailFail(!/[@(),.?":{}|<>]/g.test(value));
+      setEmailFail(
+        !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g.test(
+          value
+        )
+      );
     }
     if (type === "password") {
       setPasswordFail(!value.length > 0);

@@ -28,4 +28,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     color: "white",
   },
+  passwordHelperText: {
+    fontSize: 9,
+  },
 });
