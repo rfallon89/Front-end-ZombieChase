@@ -30,8 +30,21 @@ export default function RunHistory({ navigation }) {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1, justifyContent: "center" }}
+        style={{ flex: 1, justifyContent: "center", paddingTop: 80 }}
       >
+        <Text
+          style={{
+            textAlign: "center",
+            color: "white",
+            fontSize: 24,
+            fontWeight: "500",
+            paddingBottom: 15,
+            textShadowRadius: 3,
+            textShadowColor: "white",
+          }}
+        >
+          Run History
+        </Text>
         <FlatList
           data={runs}
           renderItem={({ item: { run_data, created_at } }) => {
@@ -46,7 +59,7 @@ export default function RunHistory({ navigation }) {
                   shadowColor: "white",
                   padding: 7,
                   borderRadius: 10,
-                  marginLeft: 55,
+                  marginLeft: 61,
                 }}
                 onPress={() =>
                   navigation.navigate("ViewRun", {

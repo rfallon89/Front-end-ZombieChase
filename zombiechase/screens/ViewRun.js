@@ -6,15 +6,16 @@ export default function ViewRun({ route }) {
     run_data: { time, runData, caught, zombieRoute },
     created_at,
   } = route.params;
-
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: 44 }}
       >
-        <Text>{created_at.slice(0, 10)}</Text>
+        <Text style={{ color: "white", textAlign: "right", marginRight: 15 }}>
+          {created_at.slice(0, 10)}
+        </Text>
         <RunFinish
           counter={time}
           caught={caught}

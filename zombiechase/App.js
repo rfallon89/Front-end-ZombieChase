@@ -158,12 +158,31 @@ export default function App() {
           <Stack.Screen
             name="ZombieChase"
             component={ZombieChase}
-            options={{ title: "" }}
+            options={({ navigation }) => ({
+              headerTransparent: true,
+              title: "",
+            })}
           />
           <Stack.Screen
             name="ViewRun"
             component={ViewRun}
-            options={{ title: "" }}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.pop()}>
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "left",
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>
+              ),
+              headerTransparent: true,
+              title: "",
+            })}
           />
           <Stack.Screen
             name="ChaseSetup"
