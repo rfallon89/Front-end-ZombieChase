@@ -15,9 +15,11 @@ import { RunFinish } from "../component/runFinish";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
-  const [position, setPosition] = useState([]);
-  const [speed, setSpeed] = useState([]);
-  const [distance, setDistance] = useState(0);
+  const [runData, setRunData] = useState({
+    position: [],
+    distance: 0,
+    speed: [],
+  });
   const [counter, setCounter] = useState(0);
   //--------------------------------------------------------------------------------------
   const [tracker, setTracker] = useState(null);
@@ -36,6 +38,10 @@ export default function StartRun() {
       }
     };
     permissionRequest();
+    startAudio();
+    setRunData((cur) => {
+      return { ...cur, position: [] };
+    });
   }, []);
 
   useEffect(() => {
@@ -44,21 +50,23 @@ export default function StartRun() {
       let tracking = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.BestForNavigation,
-          distanceInterval: 10,
+          distanceInterval: 5,
         },
         ({ coords }) => {
           let latLong = {
             latitude: coords.latitude,
             longitude: coords.longitude,
           };
-
-          setPosition((cur) => {
-            setDistance(
-              geolib.getPathLength([...cur, latLong], geolib.getPreciseDistance)
-            );
-            return [...cur, latLong];
+          setRunData((cur) => {
+            return {
+              position: [...cur.position, latLong],
+              distance: geolib.getPathLength(
+                [...cur.position, latLong],
+                geolib.getPreciseDistance
+              ),
+              speed: [...cur.speed, coords.speed],
+            };
           });
-          setSpeed((cur) => [...cur, coords.speed]);
         }
       );
       setTracker(tracking);
@@ -107,26 +115,14 @@ export default function StartRun() {
       >
         {!start && !pause && !stop ? (
           <View>
-            <RunData
-              counter={counter}
-              distance={distance}
-              speed={speed}
-              stop={stop}
-              position={position}
-            />
+            <RunData counter={counter} runData={runData} />
             <TouchableOpacity onPress={commence} style={styles.btnPosition}>
               <Text style={styles.startbtn}>Start</Text>
             </TouchableOpacity>
           </View>
         ) : pause && !stop ? (
           <View>
-            <RunData
-              counter={counter}
-              distance={distance}
-              speed={speed}
-              stop={stop}
-              position={position}
-            />
+            <RunData counter={counter} runData={runData} />
             <View
               style={{ flexDirection: "row", justifyContent: "space-evenly" }}
             >
@@ -146,13 +142,7 @@ export default function StartRun() {
           </View>
         ) : !stop && start ? (
           <View>
-            <RunData
-              counter={counter}
-              distance={distance}
-              speed={speed}
-              stop={stop}
-              position={position}
-            />
+            <RunData counter={counter} runData={runData} />
             <View
               style={{ flexDirection: "row", justifyContent: "space-evenly" }}
             >
@@ -171,12 +161,7 @@ export default function StartRun() {
             </View>
           </View>
         ) : (
-          <RunFinish
-            counter={counter}
-            distance={distance}
-            speed={speed}
-            position={position}
-          />
+          <RunFinish counter={counter} runData={runData} />
         )}
       </ImageBackground>
     </View>

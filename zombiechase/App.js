@@ -1,7 +1,6 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LogInScreen from "./screens/LogInScreen";
 import UserHome from "./screens/UserHome";
 import StartRun from "./screens/StartRun";
 import RunHistory from "./screens/RunHistory";
@@ -22,7 +21,11 @@ export default function App() {
           <Stack.Screen
             name="Login"
             component={Login}
-            options={{ title: "" }}
+            options={{
+              title: "",
+              statusBarTranslucent: true,
+              navigationBarHidden: true,
+            }}
           />
 
           <Stack.Screen
