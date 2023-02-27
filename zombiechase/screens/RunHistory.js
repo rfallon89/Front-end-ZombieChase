@@ -12,7 +12,7 @@ import { getRuns } from "../utils/api";
 import zombie from "../assets/zombieRunner.png";
 import runner from "../assets/runner.png";
 import Background from "../assets/Background.png";
-import { format, compareAsc } from "date-fns";
+import { format } from "date-fns";
 
 export default function RunHistory({ navigation }) {
   const {
