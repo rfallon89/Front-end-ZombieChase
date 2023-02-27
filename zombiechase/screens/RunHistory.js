@@ -25,14 +25,6 @@ export default function RunHistory({ navigation }) {
     getRuns(_id, token).then((res) => setRuns(res.reverse()));
   }, []);
 
-  const dateFormate = (created_at) => {
-    const date = format(new Date(created_at), "MMM dd, yyyy hh:mm aaaaa'm'");
-
-    console.log(format(new Date(created_at), "MMM dd, yyyy hh:mm aaaaa'm'"));
-
-    return date;
-  };
-
   return runs.length > 0 ? (
     <View style={{ flex: 1, justifyContent: "center" }}>
       <ImageBackground
