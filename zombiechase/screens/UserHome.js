@@ -32,9 +32,6 @@ export default function UserHome({ navigation }) {
   const RunHistory = () => {
     navigation.push("RunHistory", { user: user });
   };
-  const Profile = () => {
-    navigation.push("Profile")
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -43,20 +40,12 @@ export default function UserHome({ navigation }) {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-<<<<<<< HEAD
-        <Text>UserName</Text>
-        <TouchableOpacity onPress={Profile}>
-          <Text>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={Go} style={styles.card}>
-=======
         <TouchableOpacity onPress={signOut}>
           <Button icon="location-exit" style={styles.signOut}>
             Sign Out
           </Button>
         </TouchableOpacity>
         <TouchableOpacity onPress={Go} style={styles.cardTop}>
->>>>>>> ef503db757feb7370c88168f84a069385b744bcd
           <Image source={runIcon} />
           <Text style={styles.textRun}>Start Run </Text>
         </TouchableOpacity>

@@ -38,10 +38,16 @@ export default function App() {
               route: {
                 params: { user },
               },
+              navigation,
             }) => ({
               headerTransparent: true,
               headerLeft: () => (
-                <TouchableOpacity style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => {
+                    navigation.push("Profile");
+                  }}
+                >
                   {user.image ? (
                     <Avatar.Image size={40} source={{ uri: user.image }} />
                   ) : (
@@ -121,12 +127,18 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={Profile}
-            options={{ title: "" }}
+            options={{
+              title: "",
+              headerTransparent: true,
+            }}
           />
           <Stack.Screen
             name="EditProfile"
             component={EditProfile}
-            options={{ title: "" }}
+            options={{
+              title: "",
+              headerTransparent: true,
+            }}
           />
           <Stack.Screen
             name="RunHistory"

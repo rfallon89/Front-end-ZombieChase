@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   Card,
@@ -17,14 +18,14 @@ import background from "../assets/zombie_run_design.png";
 import React, { useContext, useEffect } from "react";
 import { userContext } from "../component/UserContext";
 import { useState } from "react";
-import { getUser, updateUser } from "../utils/api";
+import { deleteUser, getUser, updateUser } from "../utils/api";
 
 function EditProfile({ navigation }) {
   const { user, setUser, token } = useContext(userContext);
   const [name, setName] = useState(user.name);
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(user.password);
   const [image, setImage] = useState(user.image);
   const [updateUserFail, setUpdateUserFail] = useState(false);
   const [usernameFail, setUsernameFail] = useState(false);
@@ -32,6 +33,22 @@ function EditProfile({ navigation }) {
   const [nameFail, setNameFail] = useState(false);
   const [passwordFail, setPasswordFail] = useState(false);
   const [imageFail, setImageFail] = useState(false);
+
+  console.log(user);
+
+  const confirmDeleteUser = () => {
+    Alert.alert("Delete User", "Are you sure you want to delete this user?", [
+      { text: "Cancel", onPress: () => {} },
+      {
+        text: "Yes",
+        onPress: () => {
+          deleteUser(token, user._id).then((res) => {
+            navigation.push("Login");
+          });
+        },
+      },
+    ]);
+  };
 
   const validate = (type, value) => {
     if (type === "username") {
@@ -63,9 +80,11 @@ function EditProfile({ navigation }) {
         username: username,
         email: email,
         profile_image_url: image,
+        password: password,
       };
       updateUser(token, updatedUser)
         .then((data) => {
+          console.log(data);
           navigation.navigate("Profile");
           setUser({
             name: data.name,
@@ -98,6 +117,12 @@ function EditProfile({ navigation }) {
             />
           )}
         </View>
+        <TouchableOpacity
+          style={styles.deleteUserButton}
+          onPress={confirmDeleteUser}
+        >
+          <Text style={styles.deleteUserButtonText}>Delete User</Text>
+        </TouchableOpacity>
         <View style={styles.form}>
           <TextInput
             style={styles.input}
@@ -125,6 +150,16 @@ function EditProfile({ navigation }) {
             value={email}
             onChangeText={setEmail}
             onBlur={() => validate("email", email)}
+          />
+          <HelperText type="error" visible={passwordFail}>
+            Please enter a valid password
+          </HelperText>
+          <TextInput
+            style={styles.input}
+            label="password"
+            value={password}
+            onChangeText={setPassword}
+            onBlur={() => validate("password", password)}
           />
           <HelperText type="error" visible={emailFail}>
             Please enter a valid email
@@ -184,10 +219,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
-  changeAvatarButton: {
+  deleteUserButton: {
     marginTop: 10,
   },
-  changeAvatarButtonText: {
+  deleteUserButtonText: {
     color: "#1E90FF",
     fontSize: 18,
   },

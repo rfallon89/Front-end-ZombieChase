@@ -22,16 +22,15 @@ export const getUser = (token) => {
 };
 
 export const updateUser = (token, updatedUser) => {
-  // const updatedUser = {
-  //   username: username,
-  //   email: email,
-  //   name: name,
-  // };
   return api
     .patch(`/user?secret_token=${token}`, updatedUser)
     .then(({ data: { result } }) => {
       return result;
     });
+};
+
+export const deleteUser = (token, id) => {
+  return api.delete(`/user/${id}?secret_token=${token}`);
 };
 
 export const signup = (user) => {
