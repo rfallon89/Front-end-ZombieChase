@@ -10,6 +10,8 @@ import Signup from "./screens/Signup";
 import ViewRun from "./screens/ViewRun";
 import ChaseSetup from "./screens/ChaseSetup";
 import { UserProvider } from "./component/UserContext";
+import Profile from "./screens/Profile";
+import EditProfile from "./screens/EditProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,16 @@ export default function App() {
             options={{ title: "" }}
           />
           <Stack.Screen name="Run" component={StartRun} />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{ title: "" }}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{ title: "" }}
+          />
           <Stack.Screen
             name="RunHistory"
             component={RunHistory}

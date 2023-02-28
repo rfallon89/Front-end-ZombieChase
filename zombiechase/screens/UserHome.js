@@ -49,6 +49,9 @@ export default function UserHome({ route, navigation }) {
   const RunHistory = () => {
     navigation.push("RunHistory");
   };
+  const Profile = () => {
+    navigation.push("Profile")
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -58,6 +61,9 @@ export default function UserHome({ route, navigation }) {
         style={{ flex: 1, paddingTop: 50 }}
       >
         <Text>UserName</Text>
+        <TouchableOpacity onPress={Profile}>
+          <Text>Profile</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={Go} style={styles.card}>
           <Image source={runIcon} />
           <Text style={styles.textRun}>Start Run </Text>

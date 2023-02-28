@@ -21,6 +21,19 @@ export const getUser = (token) => {
   });
 };
 
+export const updateUser = (token, updatedUser) => {
+  // const updatedUser = {
+  //   username: username,
+  //   email: email,
+  //   name: name,
+  // };
+  return api
+    .patch(`/user?secret_token=${token}`, updatedUser)
+    .then(({ data: { result } }) => {
+      return result;
+    });
+};
+
 export const signup = (user) => {
   return api.post(`/signup`, user).then(({ data }) => {
     return data;
