@@ -6,7 +6,6 @@ import background from "../assets/zombie_run_design.png";
 import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
 import { login, signup, getUser } from "../utils/api";
 import { userContext } from "../component/UserContext";
-import Login from "./Login";
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = useState("");

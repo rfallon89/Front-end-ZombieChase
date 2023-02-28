@@ -88,28 +88,28 @@ export default function ChaseSetup({ navigation }) {
               theme={{ colors: { background: `#E6E6FA` } }}
             >
               <List.Item
-                title="Easy"
+                title="Easy (100m)"
                 onPress={() => {
                   setPick("Easy");
                   handlePress();
-                  setZombieStart(-50);
+                  setZombieStart(-100);
                 }}
                 style={styles.drop}
               />
               <List.Item
-                title="Medium"
+                title="Medium (50m)"
                 onPress={() => {
                   setPick("Medium");
                   handlePress();
-                  setZombieStart(-30);
+                  setZombieStart(-50);
                 }}
               />
               <List.Item
-                title="Hard"
+                title="Hard (25m)"
                 onPress={() => {
                   setPick("Hard");
                   handlePress();
-                  setZombieStart(-10);
+                  setZombieStart(-25);
                 }}
               />
             </List.Accordion>

@@ -67,9 +67,15 @@ export default function RunHistory({ navigation }) {
                     created_at: created_at,
                   })
                 }
+                // onLongPress={}
               >
-                <Image source={run_data.zombieRoute ? zombie : runner} />
-                <View style={{ marginLeft: 15, paddingTop: 10 }}>
+                <Image
+                  style={{ marginTop: 7, zIndex: 1 }}
+                  source={run_data.zombieRoute ? zombie : runner}
+                />
+                <View
+                  style={{ marginLeft: 13, paddingVertical: 10, zIndex: 1 }}
+                >
                   <Text style={{ fontSize: 14, fontWeight: "500" }}>
                     {created_at
                       ? format(new Date(created_at), "MMM dd, yyyy")

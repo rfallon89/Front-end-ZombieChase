@@ -1,4 +1,4 @@
-import { RunFinish } from "../component/runFinish";
+import { RunView } from "../component/RunView";
 import { View, Text, ImageBackground } from "react-native";
 import Background from "../assets/Background.png";
 export default function ViewRun({ route }) {
@@ -16,7 +16,7 @@ export default function ViewRun({ route }) {
         <Text style={{ color: "white", textAlign: "right", marginRight: 15 }}>
           {created_at.slice(0, 10)}
         </Text>
-        <RunFinish
+        <RunView
           counter={time}
           caught={caught}
           zombieRoute={zombieRoute}
