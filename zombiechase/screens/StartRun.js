@@ -8,10 +8,10 @@ import {
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import { RunData } from "../component/runDataCard";
+import { RunData } from "../component/RunDataCard";
 import startAudio from "../utils/startRace";
 import Background from "../assets/Background.png";
-import { RunFinish } from "../component/runFinish";
+import { RunFinish } from "../component/RunFinish";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------

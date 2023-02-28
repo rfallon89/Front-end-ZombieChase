@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
-import { View, TouchableOpacity, ImageBackground } from "react-native";
+import { View, ImageBackground } from "react-native";
 import { styles } from "../component/styles";
 import background from "../assets/zombie_run_design.png";
-import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
+import { TextInput, Button, HelperText, Text } from "react-native-paper";
 import { signup } from "../utils/api";
 
 export default function Signup({ navigation }) {
