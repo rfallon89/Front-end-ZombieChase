@@ -1,36 +1,26 @@
-import {
-  View,
-  TouchableOpacity,
-  ImageBackground,
-  StyleSheet,
-} from "react-native";
+import { View, ImageBackground, Image } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import background from "../assets/zombie_run_design.png";
-import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
+import { TextInput, Button, HelperText, Text } from "react-native-paper";
 import { styles } from "../component/styles";
 import { userContext } from "../component/UserContext";
 import { useIsFocused } from "@react-navigation/native";
-import { login } from "../utils/api";
+import { login, getUser } from "../utils/api";
+import logo from "../assets/logo.png";
 
 export default function ({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginFail, setLoginFail] = useState(false);
-  const [emailFail, setEmailFail] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [loginFail, setLoginFail] = useState(null);
+  const [emailFail, setEmailFail] = useState(null);
   const [passwordFail, setPasswordFail] = useState(false);
-  const { token, isLoggedIn } = useContext(userContext);
-  const focus = useIsFocused();
-
-  useEffect(() => {
-    if (isLoggedIn === true) {
-      navigation.navigate("UserHome", {
-        responseToken: token,
-      });
-    }
-  }, [focus]);
+  const { setToken, setIsLoggedIn, setUser } = useContext(userContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = (type, value) => {
+    setButtonDisabled(false);
     if (type === "email") {
       setEmailFail(
         !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g.test(
@@ -44,19 +34,27 @@ export default function ({ navigation }) {
   };
 
   const attemptLogin = () => {
+    setIsLoading(true);
     if (!passwordFail && !emailFail) {
-      axios;
       login(email, password)
         .then((data) => {
           setLoginFail(false);
-          navigation.navigate("UserHome", {
-            responseToken: data.token,
+          getUser(data.token).then((data) => {
+            setIsLoading(false);
+            setIsLoggedIn(true);
+            setToken(data.token);
+            setUser(data.user);
+            navigation.navigate("UserHome", {
+              responseToken: data.token,
+              user: data.user,
+            });
           });
         })
         .catch((err) => {
           setLoginFail(true);
-          console.log(err);
         });
+    } else {
+      setLoginFail(true);
     }
   };
 
@@ -67,15 +65,12 @@ export default function ({ navigation }) {
         resizeMode="cover"
         style={styles.image}
       >
+        <Image source={logo} style={{ marginLeft: "6%" }} />
         <HelperText type="error" visible={loginFail}>
           Email or password invalid!
         </HelperText>
 
         <View style={styles.card}>
-          <Text style={{ color: "white" }} variant="headlineLarge">
-            Login
-          </Text>
-
           <HelperText type="error" visible={emailFail}>
             Please enter a valid email
           </HelperText>
@@ -102,7 +97,12 @@ export default function ({ navigation }) {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          <Button onPress={attemptLogin} mode="contained" style={styles.button}>
+          <Button
+            onPress={attemptLogin}
+            mode="contained"
+            disabled={buttonDisabled}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </Button>
 

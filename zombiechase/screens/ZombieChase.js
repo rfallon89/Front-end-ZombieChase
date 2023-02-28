@@ -9,8 +9,8 @@ import {
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import { RunData } from "../component/runDataCard";
-import { RunFinish } from "../component/runFinish";
+import { RunData } from "../component/RunDataCard";
+import { RunFinish } from "../component/RunFinish";
 import zombieAudio from "../utils/zombieAudio";
 import startAudio from "../utils/startRace";
 import { timerFormat } from "../utils/timerFormat";
@@ -151,12 +151,13 @@ export default function ZombieChase({ route }) {
     clearInterval(zombie);
   };
   //------------------------------------------------------------
+
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: 60 }}
       >
         {!stop ? (
           <View>
@@ -248,7 +249,13 @@ export default function ZombieChase({ route }) {
         ) : (
           //--------------------------Stop Render---------------------------
           <View>
-            {caught.distance ? (
+            {runData.distance / 1000 < chaseDistance ? (
+              <Text style={styles.zombieStatus}>
+                {`You stopped ${
+                  chaseDistance - runData.distance / 1000
+                }km before your goal. The zombie is going to get you!!!!`}
+              </Text>
+            ) : caught.distance ? (
               <Text style={styles.zombieStatus}>
                 {`Your brains were eaten ${timerFormat(caught.time)} in at ${
                   caught.distance / 1000

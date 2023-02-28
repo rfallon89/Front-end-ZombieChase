@@ -8,30 +8,14 @@ import {
   Image,
 } from "react-native";
 import { userContext } from "../component/UserContext";
-import { getUser } from "../utils/api";
 import Background from "../assets/Background.png";
 import zombieGrave from "../assets/zombieGrave.png";
 import runIcon from "../assets/runIcon.png";
 import histroy from "../assets/history.png";
+import { Button } from "react-native-paper";
 
-export default function UserHome({ route, navigation }) {
-  const { responseToken } = route.params;
-  const { setUser, setToken, setIsLoggedIn } = useContext(userContext);
-
-  useEffect(() => {
-    getUser(responseToken)
-      .then((data) => {
-        setUser(data.user);
-        setToken(data.token);
-        setIsLoggedIn(true);
-      })
-      .catch((err) => {
-        setUser({});
-        setToken("");
-        setIsLoggedIn(false);
-        navigation.navigate("Login");
-      });
-  }, []);
+export default function UserHome({ navigation }) {
+  const { setUser, setToken, setIsLoggedIn, user } = useContext(userContext);
 
   const signOut = () => {
     setUser({});
@@ -39,15 +23,14 @@ export default function UserHome({ route, navigation }) {
     setIsLoggedIn(false);
     navigation.navigate("Login");
   };
-
   const Go = () => {
-    navigation.push("Run");
+    navigation.push("Run", { user: user });
   };
   const ZombieChase = () => {
-    navigation.push("ChaseSetup");
+    navigation.push("ChaseSetup", { user: user });
   };
   const RunHistory = () => {
-    navigation.push("RunHistory");
+    navigation.push("RunHistory", { user: user });
   };
   const Profile = () => {
     navigation.push("Profile")
@@ -58,13 +41,22 @@ export default function UserHome({ route, navigation }) {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1, paddingTop: 50 }}
+        style={{ flex: 1 }}
       >
+<<<<<<< HEAD
         <Text>UserName</Text>
         <TouchableOpacity onPress={Profile}>
           <Text>Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={Go} style={styles.card}>
+=======
+        <TouchableOpacity onPress={signOut}>
+          <Button icon="location-exit" style={styles.signOut}>
+            Sign Out
+          </Button>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={Go} style={styles.cardTop}>
+>>>>>>> ef503db757feb7370c88168f84a069385b744bcd
           <Image source={runIcon} />
           <Text style={styles.textRun}>Start Run </Text>
         </TouchableOpacity>
@@ -75,9 +67,6 @@ export default function UserHome({ route, navigation }) {
         <TouchableOpacity onPress={RunHistory} style={styles.card}>
           <Image source={histroy} />
           <Text style={styles.textHistory}> Run History</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={signOut}>
-          <Text> Sign out</Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>
@@ -94,7 +83,24 @@ const styles = StyleSheet.create({
     shadowColor: "white",
     padding: 12,
     borderRadius: 10,
-    marginLeft: 55,
+    marginLeft: 58,
+  },
+  signOut: {
+    position: "absolute",
+    top: 500,
+    right: 0,
+    zIndex: 1,
+  },
+  cardTop: {
+    flexDirection: "row",
+    backgroundColor: "#a599ad",
+    width: 200,
+    marginTop: 120,
+    elevation: 20,
+    shadowColor: "white",
+    padding: 12,
+    borderRadius: 10,
+    marginLeft: 58,
   },
   textRun: {
     fontSize: 16,

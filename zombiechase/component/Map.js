@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   mapNormal: {
     width: "90%",
-    height: "75%",
+    height: "65%",
     marginHorizontal: 15,
     marginVertical: 15,
   },

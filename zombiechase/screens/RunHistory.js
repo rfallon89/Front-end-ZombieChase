@@ -12,6 +12,7 @@ import { getRuns } from "../utils/api";
 import zombie from "../assets/zombieRunner.png";
 import runner from "../assets/runner.png";
 import Background from "../assets/Background.png";
+import { format } from "date-fns";
 
 export default function RunHistory({ navigation }) {
   const {
@@ -29,8 +30,21 @@ export default function RunHistory({ navigation }) {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1, justifyContent: "center" }}
+        style={{ flex: 1, justifyContent: "center", paddingTop: 80 }}
       >
+        <Text
+          style={{
+            textAlign: "center",
+            color: "white",
+            fontSize: 24,
+            fontWeight: "500",
+            paddingBottom: 15,
+            textShadowRadius: 3,
+            textShadowColor: "white",
+          }}
+        >
+          Run History
+        </Text>
         <FlatList
           data={runs}
           renderItem={({ item: { run_data, created_at } }) => {
@@ -45,7 +59,7 @@ export default function RunHistory({ navigation }) {
                   shadowColor: "white",
                   padding: 7,
                   borderRadius: 10,
-                  marginLeft: 55,
+                  marginLeft: 61,
                 }}
                 onPress={() =>
                   navigation.navigate("ViewRun", {
@@ -53,11 +67,24 @@ export default function RunHistory({ navigation }) {
                     created_at: created_at,
                   })
                 }
+                // onLongPress={}
               >
-                <Image source={run_data.zombieRoute ? zombie : runner} />
-                <View style={{ marginLeft: 15, paddingTop: 10 }}>
+                <Image
+                  style={{ marginTop: 7, zIndex: 1 }}
+                  source={run_data.zombieRoute ? zombie : runner}
+                />
+                <View
+                  style={{ marginLeft: 13, paddingVertical: 10, zIndex: 1 }}
+                >
                   <Text style={{ fontSize: 14, fontWeight: "500" }}>
-                    {created_at ? created_at.slice(0, 10) : null}
+                    {created_at
+                      ? format(new Date(created_at), "MMM dd, yyyy")
+                      : null}
+                  </Text>
+                  <Text>
+                    {created_at
+                      ? format(new Date(created_at), "hh:mm aaaaa'm'")
+                      : null}
                   </Text>
                   <Text>{`${run_data.runData.distance / 1000} km`}</Text>
                 </View>

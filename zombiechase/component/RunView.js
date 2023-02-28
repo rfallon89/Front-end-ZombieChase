@@ -2,30 +2,13 @@ import avgSpeed from "../utils/avgSpeed";
 import { timerFormat } from "../utils/timerFormat";
 import { Map } from "./Map";
 import { View, Text, StyleSheet } from "react-native";
-import { postRun } from "../utils/api";
-import { userContext } from "./UserContext";
-import { useContext, useEffect } from "react";
 
-export const RunFinish = ({
+export const RunView = ({
   counter,
   caught,
   runData: { distance, speed, position },
   zombieRoute,
 }) => {
-  const {
-    user: { _id },
-    token,
-  } = useContext(userContext);
-  const run_data = {
-    runData: { distance, speed, position },
-    time: counter,
-    caught: caught,
-    zombieRoute: zombieRoute,
-  };
-  useEffect(() => {
-    postRun(_id, token, run_data);
-  }, []);
-
   return (
     <View>
       {zombieRoute ? (

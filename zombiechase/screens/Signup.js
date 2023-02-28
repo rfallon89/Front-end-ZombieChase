@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, TouchableOpacity, ImageBackground } from "react-native";
 import { styles } from "../component/styles";
 import background from "../assets/zombie_run_design.png";
 import { Card, TextInput, Button, HelperText, Text } from "react-native-paper";
-import { signup } from "../utils/api";
+import { login, signup, getUser } from "../utils/api";
+import { userContext } from "../component/UserContext";
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = useState("");
@@ -12,13 +13,17 @@ export default function Signup({ navigation }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [profile_image_url, setProfileImageUrl] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [signupFail, setSignupFail] = useState(false);
   const [usernameFail, setUsernameFail] = useState(false);
   const [emailFail, setEmailFail] = useState(false);
   const [nameFail, setNameFail] = useState(false);
   const [passwordFail, setPasswordFail] = useState(false);
+  const { setToken, setIsLoggedIn, setUser } = useContext(userContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = (type, value) => {
+    setButtonDisabled(false);
     if (type === "username") {
       setUsernameFail(!value.length > 0);
     }
@@ -38,6 +43,7 @@ export default function Signup({ navigation }) {
   };
 
   const attemptSignup = () => {
+    setIsLoading(true);
     const user = {
       username,
       email,
@@ -45,15 +51,31 @@ export default function Signup({ navigation }) {
       password,
       profile_image_url,
     };
-    if (!(usernameFail & emailFail & nameFail & passwordFail)) {
+
+    if (!usernameFail & !emailFail & !nameFail & !passwordFail) {
       signup(user)
+        .then(() => {
+          return login(email, password);
+        })
         .then((data) => {
-          navigation.navigate("Login");
+          setSignupFail(false);
+          return getUser(data.token);
+        })
+        .then((data) => {
+          setIsLoggedIn(true);
+          setIsLoading(false);
+          setToken(data.token);
+          setUser(data.user);
+          navigation.navigate("UserHome", {
+            responseToken: data.token,
+            user: data.user,
+          });
         })
         .catch((err) => {
           setSignupFail(true);
-          console.log(err);
         });
+    } else {
+      setSignupFail(true);
     }
   };
 
@@ -65,11 +87,19 @@ export default function Signup({ navigation }) {
         style={styles.image}
       >
         <View style={styles.card}>
-          <Text variant="headlineLarge" style={{ color: "white" }}>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "right",
+              fontSize: 22,
+              fontWeight: "600",
+              marginTop: 8,
+            }}
+          >
             Sign up
           </Text>
           <HelperText type="error" visible={signupFail}>
-            Please enter a valid username
+            Please enter valid credentials
           </HelperText>
           <HelperText type="error" visible={usernameFail}>
             Please enter a valid username
@@ -120,10 +150,27 @@ export default function Signup({ navigation }) {
             secureTextEntry={true}
             onBlur={() => validate("password", password)}
           />
+          <HelperText
+            type="error"
+            style={styles.passwordHelperText}
+          ></HelperText>
+          <TextInput
+            onChangeText={setProfileImageUrl}
+            value={profile_image_url}
+            placeholder="profile image url"
+            style={styles.textInput}
+            label="profile image url"
+          />
         </View>
         <View style={styles.buttonsContainer}>
-          <Button onPress={attemptSignup} mode="contained">
-            <Text style={styles.buttonText}>Sign up</Text>
+          <Button
+            onPress={attemptSignup}
+            disabled={buttonDisabled}
+            mode="contained"
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? "loading.." : "Sign up"}
+            </Text>
           </Button>
         </View>
       </ImageBackground>

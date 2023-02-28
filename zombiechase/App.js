@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator, na } from "@react-navigation/native-stack";
 import UserHome from "./screens/UserHome";
 import StartRun from "./screens/StartRun";
 import RunHistory from "./screens/RunHistory";
@@ -9,9 +9,12 @@ import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import ViewRun from "./screens/ViewRun";
 import ChaseSetup from "./screens/ChaseSetup";
+import logo from "./assets/logo.png";
 import { UserProvider } from "./component/UserContext";
 import Profile from "./screens/Profile";
 import EditProfile from "./screens/EditProfile";
+import { Text, TouchableOpacity, Image } from "react-native";
+import { Avatar } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,23 +27,97 @@ export default function App() {
             name="Login"
             component={Login}
             options={{
-              title: "",
-              statusBarTranslucent: true,
-              navigationBarHidden: true,
+              headerShown: false,
             }}
           />
 
           <Stack.Screen
             name="UserHome"
             component={UserHome}
-            options={{ title: "" }}
+            options={({
+              route: {
+                params: { user },
+              },
+            }) => ({
+              headerTransparent: true,
+              headerLeft: () => (
+                <TouchableOpacity style={{ flexDirection: "row" }}>
+                  {user.image ? (
+                    <Avatar.Image size={40} source={{ uri: user.image }} />
+                  ) : (
+                    <Avatar.Text
+                      size={40}
+                      label={user.username.slice(0, 1).toUpperCase()}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 18,
+                      fontWeight: "600",
+                      marginLeft: 7,
+                      marginTop: 5,
+                    }}
+                  >
+                    {user.username}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              title: "",
+            })}
           />
           <Stack.Screen
             name="Signup"
             component={Signup}
-            options={{ title: "" }}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.pop()}>
+                  <Image source={logo} />
+                </TouchableOpacity>
+              ),
+              title: "",
+              headerTransparent: true,
+            })}
           />
-          <Stack.Screen name="Run" component={StartRun} />
+          <Stack.Screen
+            name="Run"
+            component={StartRun}
+            options={({
+              route: {
+                params: { user },
+              },
+              navigation,
+            }) => ({
+              headerTransparent: true,
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => navigation.pop()}
+                >
+                  {user.image ? (
+                    <Avatar.Image size={40} source={{ uri: user.image }} />
+                  ) : (
+                    <Avatar.Text
+                      size={40}
+                      label={user.username.slice(0, 1).toUpperCase()}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 18,
+                      fontWeight: "600",
+                      marginLeft: 7,
+                      marginTop: 5,
+                    }}
+                  >
+                    {user.username}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              title: "",
+            })}
+          />
           <Stack.Screen
             name="Profile"
             component={Profile}
@@ -54,22 +131,109 @@ export default function App() {
           <Stack.Screen
             name="RunHistory"
             component={RunHistory}
-            options={{ title: "" }}
+            options={({
+              route: {
+                params: { user },
+              },
+              navigation,
+            }) => ({
+              headerTransparent: true,
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => navigation.pop()}
+                >
+                  {user.image ? (
+                    <Avatar.Image size={40} source={{ uri: user.image }} />
+                  ) : (
+                    <Avatar.Text
+                      size={40}
+                      label={user.username.slice(0, 1).toUpperCase()}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 18,
+                      fontWeight: "600",
+                      marginLeft: 7,
+                      marginTop: 5,
+                    }}
+                  >
+                    {user.username}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              title: "",
+            })}
           />
           <Stack.Screen
             name="ZombieChase"
             component={ZombieChase}
-            options={{ title: "" }}
+            options={({ navigation }) => ({
+              headerTransparent: true,
+              title: "",
+            })}
           />
           <Stack.Screen
             name="ViewRun"
             component={ViewRun}
-            options={{ title: "" }}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.pop()}>
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "left",
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>
+              ),
+              headerTransparent: true,
+              title: "",
+            })}
           />
           <Stack.Screen
             name="ChaseSetup"
             component={ChaseSetup}
-            options={{ title: "" }}
+            options={({
+              route: {
+                params: { user },
+              },
+              navigation,
+            }) => ({
+              headerTransparent: true,
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => navigation.pop()}
+                >
+                  {user.image ? (
+                    <Avatar.Image size={40} source={{ uri: user.image }} />
+                  ) : (
+                    <Avatar.Text
+                      size={40}
+                      label={user.username.slice(0, 1).toUpperCase()}
+                    />
+                  )}
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 18,
+                      fontWeight: "600",
+                      marginLeft: 7,
+                      marginTop: 5,
+                    }}
+                  >
+                    {user.username}
+                  </Text>
+                </TouchableOpacity>
+              ),
+              title: "",
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

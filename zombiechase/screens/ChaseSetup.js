@@ -39,6 +39,9 @@ export default function ChaseSetup({ navigation }) {
         console.log("location tracking denied");
         return;
       }
+      const startLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.BestForNavigation,
+      });
     };
     permissionRequest();
   }, []);
@@ -57,7 +60,7 @@ export default function ChaseSetup({ navigation }) {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: 50 }}
       >
         <View style={styles.container}>
           <TextInput
@@ -85,28 +88,28 @@ export default function ChaseSetup({ navigation }) {
               theme={{ colors: { background: `#E6E6FA` } }}
             >
               <List.Item
-                title="Easy"
+                title="Easy (100m)"
                 onPress={() => {
                   setPick("Easy");
                   handlePress();
-                  setZombieStart(-50);
+                  setZombieStart(-100);
                 }}
                 style={styles.drop}
               />
               <List.Item
-                title="Medium"
+                title="Medium (50m)"
                 onPress={() => {
                   setPick("Medium");
                   handlePress();
-                  setZombieStart(-30);
+                  setZombieStart(-50);
                 }}
               />
               <List.Item
-                title="Hard"
+                title="Hard (25m)"
                 onPress={() => {
                   setPick("Hard");
                   handlePress();
-                  setZombieStart(-10);
+                  setZombieStart(-25);
                 }}
               />
             </List.Accordion>

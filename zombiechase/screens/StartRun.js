@@ -8,10 +8,10 @@ import {
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as geolib from "geolib";
-import { RunData } from "../component/runDataCard";
+import { RunData } from "../component/RunDataCard";
 import startAudio from "../utils/startRace";
 import Background from "../assets/Background.png";
-import { RunFinish } from "../component/runFinish";
+import { RunFinish } from "../component/RunFinish";
 
 export default function StartRun() {
   //--------------------------------------------------------------------------------------
@@ -36,11 +36,14 @@ export default function StartRun() {
         console.log("location tracking denied");
         return;
       }
+      const startLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.BestForNavigation,
+      });
     };
     permissionRequest();
     startAudio();
     setRunData((cur) => {
-      return { ...cur, position: [] };
+      return { position: [], distance: 0, speed: [] };
     });
   }, []);
 
@@ -111,7 +114,7 @@ export default function StartRun() {
       <ImageBackground
         source={Background}
         resizeMode="cover"
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingTop: 90 }}
       >
         {!start && !pause && !stop ? (
           <View>
