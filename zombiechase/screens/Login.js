@@ -12,12 +12,15 @@ import logo from "../assets/logo.png";
 export default function ({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginFail, setLoginFail] = useState(false);
-  const [emailFail, setEmailFail] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [loginFail, setLoginFail] = useState(null);
+  const [emailFail, setEmailFail] = useState(null);
   const [passwordFail, setPasswordFail] = useState(false);
   const { setToken, setIsLoggedIn, setUser } = useContext(userContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = (type, value) => {
+    setButtonDisabled(false);
     if (type === "email") {
       setEmailFail(
         !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g.test(
@@ -31,13 +34,15 @@ export default function ({ navigation }) {
   };
 
   const attemptLogin = () => {
+    setIsLoading(true);
     if (!passwordFail && !emailFail) {
       login(email, password)
         .then((data) => {
           setLoginFail(false);
           getUser(data.token).then((data) => {
-            setToken(data.token);
+            setIsLoading(false);
             setIsLoggedIn(true);
+            setToken(data.token);
             setUser(data.user);
             navigation.navigate("UserHome", {
               responseToken: data.token,
@@ -47,8 +52,9 @@ export default function ({ navigation }) {
         })
         .catch((err) => {
           setLoginFail(true);
-          console.log(err);
         });
+    } else {
+      setLoginFail(true);
     }
   };
 
@@ -91,7 +97,12 @@ export default function ({ navigation }) {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          <Button onPress={attemptLogin} mode="contained" style={styles.button}>
+          <Button
+            onPress={attemptLogin}
+            mode="contained"
+            disabled={buttonDisabled}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </Button>
 
