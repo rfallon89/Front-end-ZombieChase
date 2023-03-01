@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     alignItems: "center",
-    marginTop: 50,
+    marginTop: "20%",
   },
   avatar: {
     width: 150,
@@ -73,11 +73,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontSize: 25,
     fontWeight: "bold",
+    color: "white",
   },
   usernameAndEmail: {
     marginTop: 10,
     fontSize: 18,
     fontWeight: "normal",
+    color: "white",
   },
   buttonContainer: {
     marginTop: 20,

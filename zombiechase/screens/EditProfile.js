@@ -71,7 +71,7 @@ function EditProfile({ navigation }) {
   };
 
   const attemptUpdateUser = () => {
-    if (!(usernameFail & emailFail & nameFail & passwordFail)) {
+    if (!usernameFail & !emailFail & !nameFail & !passwordFail) {
       const updatedUser = {
         _id: user._id,
         name: name,

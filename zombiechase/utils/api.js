@@ -24,8 +24,8 @@ export const getUser = (token) => {
 export const updateUser = (token, updatedUser) => {
   return api
     .patch(`/user?secret_token=${token}`, updatedUser)
-    .then(({ data: { result } }) => {
-      return result;
+    .then(({ data: { user } }) => {
+      return user;
     });
 };
 
