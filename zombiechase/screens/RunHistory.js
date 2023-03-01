@@ -9,8 +9,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { userContext } from "../component/UserContext";
 import { getRuns } from "../utils/api";
-import zombie from "../assets/zombieRunner.png";
-import runner from "../assets/runner.png";
+import zombie from "../assets/zombie-larger.png";
+import runner from "../assets/runner-larger.png";
 import Background from "../assets/Background.png";
 import { format } from "date-fns";
 
@@ -72,7 +72,7 @@ export default function RunHistory({ navigation }) {
                 // onLongPress={}
               >
                 <Image
-                  style={{ marginTop: 7, zIndex: 1 }}
+                  style={{ marginTop: 7, zIndex: 1, height: 64, width: 64 }}
                   source={run_data.zombieRoute ? zombie : runner}
                 />
                 <View
