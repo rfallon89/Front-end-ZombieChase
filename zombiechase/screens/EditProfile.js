@@ -34,8 +34,6 @@ function EditProfile({ navigation }) {
   const [passwordFail, setPasswordFail] = useState(false);
   const [imageFail, setImageFail] = useState(false);
 
-  console.log(user);
-
   const confirmDeleteUser = () => {
     Alert.alert("Delete User", "Are you sure you want to delete this user?", [
       { text: "Cancel", onPress: () => {} },
