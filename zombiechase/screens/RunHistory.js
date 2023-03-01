@@ -47,19 +47,21 @@ export default function RunHistory({ navigation }) {
         </Text>
         <FlatList
           data={runs}
+          contentContainerStyle={{
+            alignItems: "stretch",
+          }}
           renderItem={({ item: { run_data, created_at } }) => {
             return (
               <TouchableOpacity
                 style={{
                   flexDirection: "row",
                   backgroundColor: "#a599ad",
-                  width: 200,
-                  margin: 7,
+                  width: "80%",
                   elevation: 20,
-                  shadowColor: "white",
                   padding: 7,
+                  margin: 4,
                   borderRadius: 10,
-                  marginLeft: 61,
+                  alignSelf: "center",
                 }}
                 onPress={() =>
                   navigation.navigate("ViewRun", {
