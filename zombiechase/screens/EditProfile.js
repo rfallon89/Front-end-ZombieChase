@@ -127,14 +127,14 @@ function EditProfile({ navigation }) {
             value={name}
             onChangeText={setName}
             onBlur={() => validate("name", name)}
-            label="name"
+            label="Name"
           />
           <HelperText type="error" visible={nameFail}>
             Please enter a valid name
           </HelperText>
           <TextInput
             style={styles.input}
-            label="username"
+            label="Username"
             value={username}
             onChangeText={setUsername}
             onBlur={() => validate("username", username)}
@@ -144,7 +144,7 @@ function EditProfile({ navigation }) {
           </HelperText>
           <TextInput
             style={styles.input}
-            label="email"
+            label="Email"
             value={email}
             onChangeText={setEmail}
             onBlur={() => validate("email", email)}
@@ -154,7 +154,7 @@ function EditProfile({ navigation }) {
           </HelperText>
           <TextInput
             style={styles.input}
-            label="password"
+            label="New Password"
             value={password}
             onChangeText={setPassword}
             onBlur={() => validate("password", password)}
@@ -164,7 +164,7 @@ function EditProfile({ navigation }) {
           </HelperText>
           <TextInput
             style={styles.input}
-            label="image url"
+            label="Image URL"
             value={image}
             onChangeText={setImage}
             onBlur={() => validate("image", image)}
