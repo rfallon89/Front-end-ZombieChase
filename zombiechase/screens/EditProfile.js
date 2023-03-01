@@ -149,8 +149,8 @@ function EditProfile({ navigation }) {
             onChangeText={setEmail}
             onBlur={() => validate("email", email)}
           />
-          <HelperText type="error" visible={passwordFail}>
-            Please enter a valid password
+          <HelperText type="error" visible={emailFail}>
+            Please enter a valid email
           </HelperText>
           <TextInput
             style={styles.input}
@@ -159,8 +159,8 @@ function EditProfile({ navigation }) {
             onChangeText={setPassword}
             onBlur={() => validate("password", password)}
           />
-          <HelperText type="error" visible={emailFail}>
-            Please enter a valid email
+          <HelperText type="error" visible={passwordFail}>
+            Please enter a valid password
           </HelperText>
           <TextInput
             style={styles.input}
