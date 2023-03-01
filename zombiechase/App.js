@@ -11,6 +11,8 @@ import ViewRun from "./screens/ViewRun";
 import ChaseSetup from "./screens/ChaseSetup";
 import logo from "./assets/logo.png";
 import { UserProvider } from "./component/UserContext";
+import Profile from "./screens/Profile";
+import EditProfile from "./screens/EditProfile";
 import { Text, TouchableOpacity, Image } from "react-native";
 import { Avatar } from "react-native-paper";
 
@@ -36,10 +38,16 @@ export default function App() {
               route: {
                 params: { user },
               },
+              navigation,
             }) => ({
               headerTransparent: true,
               headerLeft: () => (
-                <TouchableOpacity style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => {
+                    navigation.push("Profile");
+                  }}
+                >
                   {user.image ? (
                     <Avatar.Image size={40} source={{ uri: user.image }} />
                   ) : (
@@ -115,6 +123,22 @@ export default function App() {
               ),
               title: "",
             })}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              title: "",
+              headerTransparent: true,
+            }}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+              title: "",
+              headerTransparent: true,
+            }}
           />
           <Stack.Screen
             name="RunHistory"

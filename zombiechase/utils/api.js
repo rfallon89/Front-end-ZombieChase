@@ -21,6 +21,18 @@ export const getUser = (token) => {
   });
 };
 
+export const updateUser = (token, updatedUser) => {
+  return api
+    .patch(`/user?secret_token=${token}`, updatedUser)
+    .then(({ data: { result } }) => {
+      return result;
+    });
+};
+
+export const deleteUser = (token, id) => {
+  return api.delete(`/user/${id}?secret_token=${token}`);
+};
+
 export const signup = (user) => {
   return api.post(`/signup`, user).then(({ data }) => {
     return data;
