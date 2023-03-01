@@ -40,7 +40,8 @@ function ChangePassword({ navigation }) {
       <View style={styles.container}>
         <View style={styles.form}>
           <Text style={styles.text}>
-            Password must contain at least 7 letters and a special character
+            Password must contain at least {"\n"}7 letters and a special
+            character
           </Text>
           <TextInput
             style={styles.input}

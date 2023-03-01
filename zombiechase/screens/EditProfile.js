@@ -66,7 +66,7 @@ function EditProfile({ navigation }) {
   };
 
   const attemptUpdateUser = () => {
-    if (!usernameFail & !emailFail & !nameFail) {
+    if (!usernameFail & !emailFail & !nameFail & !imageFail) {
       const updatedUser = {
         _id: user._id,
         name: name.trim(),
@@ -172,8 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    top: 70,
-    height: "70%",
+    top: "10%",
   },
   form: {
     width: "80%",
