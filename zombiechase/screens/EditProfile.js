@@ -76,7 +76,6 @@ function EditProfile({ navigation }) {
       };
       updateUser(token, updatedUser)
         .then((data) => {
-          console.log(data);
           navigation.navigate("Profile");
           setUser({
             name: data.name,

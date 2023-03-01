@@ -40,13 +40,13 @@ function ChangePassword({ navigation }) {
       <View style={styles.container}>
         <View style={styles.form}>
           <Text style={styles.text}>
-            Password must contain at least 7 {"\n"}letters and a special
-            character
+            Password must contain at least 7 letters and a special character
           </Text>
           <TextInput
             style={styles.input}
             label="New Password"
             value={password}
+            secureTextEntry={true}
             onChangeText={setPassword}
           />
           <HelperText type="error" visible={passwordFail}>
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     textAlign: "center",
+    maxWidth: "100%",
   },
 });
 
