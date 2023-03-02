@@ -57,6 +57,7 @@ export default function ({ navigation }) {
           });
         })
         .catch((err) => {
+          console.log(err);
           setLoginFail(true);
           setIsLoading(false);
         });

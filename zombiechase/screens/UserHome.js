@@ -40,56 +40,50 @@ export default function UserHome({ navigation }) {
         resizeMode="cover"
         style={{ flex: 1 }}
       >
-        <TouchableOpacity onPress={signOut}>
-          <Button icon="location-exit" style={styles.signOut}>
-            Sign Out
-          </Button>
+        <TouchableOpacity onPress={signOut} style={styles.signOut}>
+          <Button icon="location-exit">Sign Out</Button>
         </TouchableOpacity>
-        <TouchableOpacity onPress={Go} style={styles.cardTop}>
-          <Image source={runIcon} />
-          <Text style={styles.textRun}>Start Run </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ZombieChase} style={styles.card}>
-          <Image source={zombieGrave} />
-          <Text style={styles.textZombie}>Zombie Chase </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={RunHistory} style={styles.card}>
-          <Image source={histroy} />
-          <Text style={styles.textHistory}> Run History</Text>
-        </TouchableOpacity>
+        <View style={styles.cardsContainer}>
+          <TouchableOpacity onPress={Go} style={styles.card}>
+            <Image source={runIcon} />
+            <Text style={styles.textRun}>Start Run </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={ZombieChase} style={styles.card}>
+            <Image source={zombieGrave} />
+            <Text style={styles.textZombie}>Zombie Chase </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={RunHistory} style={styles.card}>
+            <Image source={histroy} />
+            <Text style={styles.textHistory}> Run History</Text>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  cardsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 120,
+  },
   card: {
     flexDirection: "row",
     backgroundColor: "#a599ad",
-    width: 200,
+    width: "80%",
     margin: 7,
     elevation: 20,
     shadowColor: "white",
     padding: 12,
     borderRadius: 10,
-    marginLeft: 58,
   },
   signOut: {
     position: "absolute",
-    top: 500,
+    bottom: "5%",
     right: 0,
     zIndex: 1,
-  },
-  cardTop: {
-    flexDirection: "row",
-    backgroundColor: "#a599ad",
-    width: 200,
-    marginTop: 120,
-    elevation: 20,
-    shadowColor: "white",
-    padding: 12,
-    borderRadius: 10,
-    marginLeft: 58,
   },
   textRun: {
     fontSize: 16,
