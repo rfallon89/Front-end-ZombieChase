@@ -25,6 +25,8 @@ export const RunView = ({
           width: 200,
           marginHorizontal: "18%",
           opacity: 0.7,
+          elevation: 20,
+          shadowColor: "white",
         }}
       >
         <Text>{`Time: ${timerFormat(counter)}`}</Text>

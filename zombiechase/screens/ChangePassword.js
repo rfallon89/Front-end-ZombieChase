@@ -2,14 +2,25 @@ import React, { useContext } from "react";
 import { userContext } from "../component/UserContext";
 import background from "../assets/zombie_run_design.png";
 import { useState } from "react";
-import { ImageBackground, View, StyleSheet } from "react-native";
-import { TextInput, Button, HelperText, Text } from "react-native-paper";
+import {
+  ImageBackground,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import {
+  TextInput,
+  HelperText,
+  Text,
+  ActivityIndicator,
+} from "react-native-paper";
 import { updateUser } from "../utils/api";
 
 function ChangePassword({ navigation }) {
   const { user, token } = useContext(userContext);
   const [passwordFail, setPasswordFail] = useState(false);
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validate = (value) => {
     setPasswordFail(!/^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/.test(value));
@@ -18,7 +29,9 @@ function ChangePassword({ navigation }) {
         _id: user._id,
         password: password,
       };
+      setLoading(true);
       updateUser(token, updatedUser).then(() => {
+        setLoading(false);
         navigation.push("UserHome", {
           responseToken: token,
           user: user,
@@ -54,10 +67,18 @@ function ChangePassword({ navigation }) {
             Please enter a valid password
           </HelperText>
         </View>
-        <View style={styles.buttonsContainer}>
-          <Button onPress={() => validate(password)} mode="contained">
-            <Text style={styles.buttonText}>Update</Text>
-          </Button>
+        <View style={[styles.buttonsContainer, { marginTop: 20 }]}>
+          <TouchableOpacity
+            onPress={validate}
+            mode="contained"
+            style={styles.button}
+          >
+            {loading ? (
+              <ActivityIndicator animating={true} color={"white"} />
+            ) : (
+              <Text style={styles.buttonText}>Update</Text>
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>
@@ -90,7 +111,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonsContainer: {
-    width: "80%",
+    width: 100,
+  },
+  button: {
+    backgroundColor: "rgba(103,80,164,1)",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    width: "100%",
   },
   text: {
     color: "white",

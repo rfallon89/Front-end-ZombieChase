@@ -1,24 +1,19 @@
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet } from "react-native";
-import runner from "../assets/runner.png";
-import zombie from "../assets/zombie.png";
+import runner from "../assets/runner-larger.png";
+import zombie from "../assets/zombie-larger.png";
 import start from "../assets/start.png";
 import grave from "../assets/grave.png";
-import { useEffect, useState } from "react";
 
 export const Map = ({ position, zombieRoute, caught }) => {
-  const [runtype, setRunType] = useState("");
-  useEffect(() => {
-    zombieRoute ? setRunType("Chase") : setRunType("Normal");
-  }, []);
-
+  const middle = Math.floor(position.length / 2);
   return (
     <MapView
-      style={styles[`map${runtype}`]}
+      style={styles.map}
       customMapStyle={mapStyle}
       initialRegion={{
-        latitude: position[0].latitude,
-        longitude: position[0].longitude,
+        latitude: position[middle].latitude,
+        longitude: position[middle].longitude,
         latitudeDelta: 0.009,
         longitudeDelta: 0.009,
       }}
@@ -27,6 +22,7 @@ export const Map = ({ position, zombieRoute, caught }) => {
         title="Finish"
         icon={runner}
         coordinate={position[position.length - 1]}
+        style={{ width: 62, height: 62 }}
       />
       <Marker title="Start" icon={start} coordinate={position[0]} />
       <Polyline
@@ -63,6 +59,7 @@ export const Map = ({ position, zombieRoute, caught }) => {
             title="Zombie"
             icon={zombie}
             coordinate={zombieRoute[zombieRoute.length - 1]}
+            style={{ width: 62, height: 62 }}
           />
         ) : (
           <Marker
@@ -177,13 +174,7 @@ let mapStyle = [
   },
 ];
 const styles = StyleSheet.create({
-  mapChase: {
-    width: "90%",
-    height: "65%",
-    marginHorizontal: 15,
-    marginVertical: 15,
-  },
-  mapNormal: {
+  map: {
     width: "90%",
     height: "65%",
     marginHorizontal: 15,

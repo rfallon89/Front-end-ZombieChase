@@ -16,6 +16,7 @@ export const RunFinish = ({
     user: { _id },
     token,
   } = useContext(userContext);
+
   const run_data = {
     runData: { distance, speed, position },
     time: counter,
