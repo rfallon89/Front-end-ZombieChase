@@ -8,7 +8,7 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native-paper";
-import { styles } from "../component/styles";
+import { styles } from "../utils/styles";
 import { userContext } from "../component/UserContext";
 import { login, getUser } from "../utils/api";
 import logo from "../assets/logo.png";
@@ -80,9 +80,11 @@ export default function ({ navigation }) {
         </HelperText>
 
         <View style={styles.card}>
-          <HelperText type="error" visible={emailFail}>
-            Please enter a valid email
-          </HelperText>
+          {emailFail ? (
+            <HelperText type="error" visible={emailFail}>
+              Please enter a valid email
+            </HelperText>
+          ) : null}
           <TextInput
             onChangeText={setEmail}
             value={email}
@@ -91,9 +93,11 @@ export default function ({ navigation }) {
             onBlur={() => validate("email", email)}
             style={styles.textInput}
           />
-          <HelperText type="error" visible={passwordFail}>
-            Please enter a valid password
-          </HelperText>
+          {passwordFail ? (
+            <HelperText type="error" visible={passwordFail}>
+              Please enter a valid password
+            </HelperText>
+          ) : null}
           <TextInput
             onChangeText={setPassword}
             value={password}
@@ -110,7 +114,7 @@ export default function ({ navigation }) {
             onPress={attemptLogin}
             mode="contained"
             disabled={buttonDisabled}
-            style={[styles.button, { padding: 10.5, marginBottom: 10 }]}
+            style={[styles.button, { padding: 10, marginBottom: 10 }]}
           >
             {isLoading ? (
               <ActivityIndicator animating={true} color={"white"} />

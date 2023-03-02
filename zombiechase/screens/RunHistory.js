@@ -109,7 +109,7 @@ export default function RunHistory({ navigation }) {
             }}
           >
             <Image
-              style={{ marginTop: 7 }}
+              style={{ marginTop: 7, height: 64, width: 64 }}
               source={item.run_data.zombieRoute ? zombie : runner}
             />
             <View style={{ marginLeft: 13, paddingVertical: 10 }}>

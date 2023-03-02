@@ -17,8 +17,8 @@ import { timerFormat } from "../utils/timerFormat";
 import { zombiePositionArray } from "../utils/zombiePosition";
 import { ProgressBar } from "react-native-paper";
 import Background from "../assets/Background.png";
-import runner from "../assets/runner.png";
-import zombieRunner from "../assets/zombieRunner.png";
+import runner from "../assets/runner-larger.png";
+import zombieRunner from "../assets/zombie-larger.png";
 import finishFlag from "../assets/finishFlag.png";
 import startLine from "../assets/startLine.png";
 
@@ -167,8 +167,10 @@ export default function ZombieChase({ route }) {
               style={{
                 position: "absolute",
                 top: 220,
-                left: 255,
+                left: 250,
                 zIndex: 1,
+                width: 60,
+                height: 60,
               }}
             />
             <Image
@@ -178,6 +180,8 @@ export default function ZombieChase({ route }) {
                 top: 217,
                 left: zombieProgress,
                 zIndex: 1,
+                width: 62,
+                height: 62,
               }}
             />
             <ProgressBar
@@ -192,15 +196,12 @@ export default function ZombieChase({ route }) {
             />
             <Image
               source={runner}
-              style={{ position: "absolute", top: 220, left: runnerProgress }}
-            />
-            <Image
-              source={startLine}
               style={{
                 position: "absolute",
                 top: 220,
-                left: 3,
-                zIndex: 1,
+                left: runnerProgress,
+                width: 64,
+                height: 64,
               }}
             />
             {!start && !pause ? (

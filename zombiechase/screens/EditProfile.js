@@ -2,23 +2,20 @@ import {
   ImageBackground,
   View,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Alert,
 } from "react-native";
 import {
-  Card,
   TextInput,
-  Button,
   HelperText,
   Text,
-  Avatar,
+  ActivityIndicator,
 } from "react-native-paper";
 import background from "../assets/zombie_run_design.png";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { userContext } from "../component/UserContext";
 import { useState } from "react";
-import { deleteUser, getUser, updateUser } from "../utils/api";
+import { deleteUser, updateUser } from "../utils/api";
 
 function EditProfile({ navigation }) {
   const { user, setUser, token } = useContext(userContext);
@@ -26,11 +23,11 @@ function EditProfile({ navigation }) {
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
   const [image, setImage] = useState(user.image);
-  const [updateUserFail, setUpdateUserFail] = useState(false);
   const [usernameFail, setUsernameFail] = useState(false);
   const [emailFail, setEmailFail] = useState(false);
   const [nameFail, setNameFail] = useState(false);
   const [imageFail, setImageFail] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const confirmDeleteUser = () => {
     Alert.alert("Delete User", "Are you sure you want to delete this user?", [
@@ -66,6 +63,7 @@ function EditProfile({ navigation }) {
   };
 
   const attemptUpdateUser = () => {
+    setLoading(true);
     if (!usernameFail & !emailFail & !nameFail & !imageFail) {
       const updatedUser = {
         _id: user._id,
@@ -118,9 +116,11 @@ function EditProfile({ navigation }) {
             onBlur={() => validate("name", name)}
             label="Name"
           />
-          <HelperText type="error" visible={nameFail}>
-            Please enter a valid name
-          </HelperText>
+          {nameFail ? (
+            <HelperText type="error" visible={nameFail}>
+              Please enter a valid name
+            </HelperText>
+          ) : null}
           <TextInput
             style={styles.input}
             label="Username"
@@ -128,9 +128,11 @@ function EditProfile({ navigation }) {
             onChangeText={setUsername}
             onBlur={() => validate("username", username)}
           />
-          <HelperText type="error" visible={usernameFail}>
-            Please enter a valid username
-          </HelperText>
+          {usernameFail ? (
+            <HelperText type="error" visible={usernameFail}>
+              Please enter a valid username
+            </HelperText>
+          ) : null}
           <TextInput
             style={styles.input}
             label="Email"
@@ -138,9 +140,11 @@ function EditProfile({ navigation }) {
             onChangeText={setEmail}
             onBlur={() => validate("email", email)}
           />
-          <HelperText type="error" visible={emailFail}>
-            Please enter a valid email
-          </HelperText>
+          {emailFail ? (
+            <HelperText type="error" visible={emailFail}>
+              Please enter a valid email
+            </HelperText>
+          ) : null}
           <TextInput
             style={styles.input}
             label="Image URL"
@@ -148,14 +152,24 @@ function EditProfile({ navigation }) {
             onChangeText={setImage}
             onBlur={() => validate("image", image)}
           />
-          <HelperText type="error" visible={imageFail}>
-            Please enter a valid image url
-          </HelperText>
+          {imageFail ? (
+            <HelperText type="error" visible={imageFail}>
+              Please enter a valid image url
+            </HelperText>
+          ) : null}
         </View>
-        <View style={styles.buttonsContainer}>
-          <Button onPress={attemptUpdateUser} mode="contained">
-            <Text style={styles.buttonText}>Update</Text>
-          </Button>
+        <View style={[styles.buttonsContainer, { marginTop: 20 }]}>
+          <TouchableOpacity
+            onPress={attemptUpdateUser}
+            mode="contained"
+            style={styles.button}
+          >
+            {loading ? (
+              <ActivityIndicator animating={true} color={"white"} />
+            ) : (
+              <Text style={styles.buttonText}>Update</Text>
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>
@@ -192,6 +206,14 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
+  button: {
+    backgroundColor: "rgba(103,80,164,1)",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    width: "100%",
+  },
   changeAndDeleteBtn: {
     marginTop: 10,
   },
@@ -200,7 +222,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonsContainer: {
-    width: "80%",
+    width: 100,
   },
 });
 

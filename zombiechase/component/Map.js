@@ -1,7 +1,7 @@
 import MapView, { Polyline, Marker } from "react-native-maps";
 import { StyleSheet } from "react-native";
-import runner from "../assets/runner.png";
-import zombie from "../assets/zombie.png";
+import runner from "../assets/runner-larger.png";
+import zombie from "../assets/zombie-larger.png";
 import start from "../assets/start.png";
 import grave from "../assets/grave.png";
 
@@ -22,6 +22,7 @@ export const Map = ({ position, zombieRoute, caught }) => {
         title="Finish"
         icon={runner}
         coordinate={position[position.length - 1]}
+        style={{ width: 62, height: 62 }}
       />
       <Marker title="Start" icon={start} coordinate={position[0]} />
       <Polyline
@@ -58,6 +59,7 @@ export const Map = ({ position, zombieRoute, caught }) => {
             title="Zombie"
             icon={zombie}
             coordinate={zombieRoute[zombieRoute.length - 1]}
+            style={{ width: 62, height: 62 }}
           />
         ) : (
           <Marker
