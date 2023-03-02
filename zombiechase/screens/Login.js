@@ -1,11 +1,15 @@
-import { View, ImageBackground, Image } from "react-native";
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { View, ImageBackground, Image, TouchableOpacity } from "react-native";
+import { useState, useContext } from "react";
 import background from "../assets/zombie_run_design.png";
-import { TextInput, Button, HelperText, Text } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  HelperText,
+  Text,
+  ActivityIndicator,
+} from "react-native-paper";
 import { styles } from "../component/styles";
 import { userContext } from "../component/UserContext";
-import { useIsFocused } from "@react-navigation/native";
 import { login, getUser } from "../utils/api";
 import logo from "../assets/logo.png";
 
@@ -44,6 +48,8 @@ export default function ({ navigation }) {
             setIsLoggedIn(true);
             setToken(data.token);
             setUser(data.user);
+            setEmail("");
+            setPassword("");
             navigation.navigate("UserHome", {
               responseToken: data.token,
               user: data.user,
@@ -52,9 +58,11 @@ export default function ({ navigation }) {
         })
         .catch((err) => {
           setLoginFail(true);
+          setIsLoading(false);
         });
     } else {
       setLoginFail(true);
+      setIsLoading(false);
     }
   };
 
@@ -97,18 +105,23 @@ export default function ({ navigation }) {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          <Button
+          <TouchableOpacity
             onPress={attemptLogin}
             mode="contained"
             disabled={buttonDisabled}
-            style={styles.button}
+            style={[styles.button, { padding: 10.5, marginBottom: 10 }]}
           >
-            <Text style={styles.buttonText}>Login</Text>
-          </Button>
+            {isLoading ? (
+              <ActivityIndicator animating={true} color={"white"} />
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
+          </TouchableOpacity>
 
           <Button
             onPress={() => navigation.navigate("Signup")}
             mode="contained"
+            style={[styles.button, { width: "90%" }]}
           >
             <Text style={styles.buttonText}>Sign up</Text>
           </Button>

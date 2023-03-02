@@ -4,21 +4,16 @@ import runner from "../assets/runner.png";
 import zombie from "../assets/zombie.png";
 import start from "../assets/start.png";
 import grave from "../assets/grave.png";
-import { useEffect, useState } from "react";
 
 export const Map = ({ position, zombieRoute, caught }) => {
-  const [runtype, setRunType] = useState("");
-  useEffect(() => {
-    zombieRoute ? setRunType("Chase") : setRunType("Normal");
-  }, []);
-
+  const middle = Math.floor(position.length / 2);
   return (
     <MapView
-      style={styles[`map${runtype}`]}
+      style={styles.map}
       customMapStyle={mapStyle}
       initialRegion={{
-        latitude: position[0].latitude,
-        longitude: position[0].longitude,
+        latitude: position[middle].latitude,
+        longitude: position[middle].longitude,
         latitudeDelta: 0.009,
         longitudeDelta: 0.009,
       }}
@@ -177,13 +172,7 @@ let mapStyle = [
   },
 ];
 const styles = StyleSheet.create({
-  mapChase: {
-    width: "90%",
-    height: "65%",
-    marginHorizontal: 15,
-    marginVertical: 15,
-  },
-  mapNormal: {
+  map: {
     width: "90%",
     height: "65%",
     marginHorizontal: 15,

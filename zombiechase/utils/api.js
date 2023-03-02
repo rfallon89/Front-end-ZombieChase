@@ -41,3 +41,7 @@ export const getRuns = (user_id, token) => {
     .get(`/runs/${user_id}?secret_token=${token}`)
     .then(({ data: { result } }) => result);
 };
+
+export const deleteRun = (run_id, token) => {
+  return api.delete(`/runs/${run_id}?secret_token=${token}`);
+};
