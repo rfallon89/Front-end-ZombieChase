@@ -25,13 +25,11 @@ function EditProfile({ navigation }) {
   const [name, setName] = useState(user.name);
   const [username, setUsername] = useState(user.username);
   const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState(user.password);
   const [image, setImage] = useState(user.image);
   const [updateUserFail, setUpdateUserFail] = useState(false);
   const [usernameFail, setUsernameFail] = useState(false);
   const [emailFail, setEmailFail] = useState(false);
   const [nameFail, setNameFail] = useState(false);
-  const [passwordFail, setPasswordFail] = useState(false);
   const [imageFail, setImageFail] = useState(false);
 
   const confirmDeleteUser = () => {
@@ -65,24 +63,19 @@ function EditProfile({ navigation }) {
     if (type === "image") {
       setImageFail(!value.length > 0);
     }
-    if (type === "password") {
-      setPasswordFail(!/^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/.test(value));
-    }
   };
 
   const attemptUpdateUser = () => {
-    if (!usernameFail & !emailFail & !nameFail & !passwordFail) {
+    if (!usernameFail & !emailFail & !nameFail & !imageFail) {
       const updatedUser = {
         _id: user._id,
-        name: name,
-        username: username,
-        email: email,
-        profile_image_url: image,
-        password: password,
+        name: name.trim(),
+        username: username.trim(),
+        email: email.trim(),
+        profile_image_url: image.trim(),
       };
       updateUser(token, updatedUser)
         .then((data) => {
-          console.log(data);
           navigation.navigate("Profile");
           setUser({
             name: data.name,
@@ -105,21 +98,17 @@ function EditProfile({ navigation }) {
       style={styles.background}
     >
       <View style={styles.container}>
-        <View style={styles.avatarContainer}>
-          {user.image ? (
-            <Avatar.Image source={{ uri: user.image }} size={100} />
-          ) : (
-            <Avatar.Text
-              label={user.username.slice(0, 1).toUpperCase()}
-              size={100}
-            />
-          )}
-        </View>
         <TouchableOpacity
-          style={styles.deleteUserButton}
+          style={styles.changeAndDeleteBtn}
+          onPress={() => navigation.push("ChangePassword")}
+        >
+          <Text style={styles.changeAndDeleteBtnText}>Change Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.changeAndDeleteBtn}
           onPress={confirmDeleteUser}
         >
-          <Text style={styles.deleteUserButtonText}>Delete User</Text>
+          <Text style={styles.changeAndDeleteBtnText}>Delete User</Text>
         </TouchableOpacity>
         <View style={styles.form}>
           <TextInput
@@ -154,16 +143,6 @@ function EditProfile({ navigation }) {
           </HelperText>
           <TextInput
             style={styles.input}
-            label="New Password"
-            value={password}
-            onChangeText={setPassword}
-            onBlur={() => validate("password", password)}
-          />
-          <HelperText type="error" visible={passwordFail}>
-            Please enter a valid password
-          </HelperText>
-          <TextInput
-            style={styles.input}
             label="Image URL"
             value={image}
             onChangeText={setImage}
@@ -193,7 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    top: 50,
+    top: "10%",
   },
   form: {
     width: "80%",
@@ -208,24 +187,19 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
-  avatarContainer: {
-    marginTop: 10,
-    alignItems: "center",
-  },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 50,
   },
-  deleteUserButton: {
+  changeAndDeleteBtn: {
     marginTop: 10,
   },
-  deleteUserButtonText: {
+  changeAndDeleteBtnText: {
     color: "#1E90FF",
     fontSize: 18,
   },
   buttonsContainer: {
-    padding: 20,
     width: "80%",
   },
 });
